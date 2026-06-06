@@ -1,0 +1,558 @@
+﻿<Cube xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ddl2="http://schemas.microsoft.com/analysisservices/2003/engine/2" xmlns:ddl2_2="http://schemas.microsoft.com/analysisservices/2003/engine/2/2" xmlns:ddl100_100="http://schemas.microsoft.com/analysisservices/2008/engine/100/100" xmlns:ddl200="http://schemas.microsoft.com/analysisservices/2010/engine/200" xmlns:ddl200_200="http://schemas.microsoft.com/analysisservices/2010/engine/200/200" xmlns:ddl300="http://schemas.microsoft.com/analysisservices/2011/engine/300" xmlns:ddl300_300="http://schemas.microsoft.com/analysisservices/2011/engine/300/300" xmlns:ddl400="http://schemas.microsoft.com/analysisservices/2012/engine/400" xmlns:ddl400_400="http://schemas.microsoft.com/analysisservices/2012/engine/400/400" xmlns:ddl500="http://schemas.microsoft.com/analysisservices/2013/engine/500" xmlns:ddl500_500="http://schemas.microsoft.com/analysisservices/2013/engine/500/500" xmlns:dwd="http://schemas.microsoft.com/DataWarehouse/Designer/1.0" dwd:design-time-name="fcb77de3-2777-4b63-8365-0f7b76fcc037" xmlns="http://schemas.microsoft.com/analysisservices/2003/engine">
+  <ID>Northwind_Cube</ID>
+  <MeasureGroups>
+    <MeasureGroup>
+      <ID>Fact Orders</ID>
+      <Partitions>
+        <Partition dwd:design-time-name="bf3bf08f-6fa0-423f-b204-034c083c6944">
+          <ID>FactOrders_1996</ID>
+          <Name>FactOrders_1998</Name>
+          <CreatedTimestamp>0001-01-01T00:00:00Z</CreatedTimestamp>
+          <LastSchemaUpdate>0001-01-01T00:00:00Z</LastSchemaUpdate>
+          <LastProcessed>0001-01-01T00:00:00Z</LastProcessed>
+          <State>Unprocessed</State>
+          <Source xsi:type="QueryBinding" dwd:design-time-name="4585915b-3a40-46b9-ac2c-e51231d4c4dd">
+            <DataSourceID>NorthwindDW</DataSourceID>
+            <QueryDefinition>SELECT [dbo].[FactOrders].[OrderID],[dbo].[FactOrders].[ProductKey],[dbo].[FactOrders].[CustomerKey],[dbo].[FactOrders].[EmployeeKey],[dbo].[FactOrders].[GeographyKey],[dbo].[FactOrders].[OrderDateKey],[dbo].[FactOrders].[RequiredDateKey],[dbo].[FactOrders].[ShippedDateKey],[dbo].[FactOrders].[ShipperKey],[dbo].[FactOrders].[ShipName],[dbo].[FactOrders].[UnitPrice],[dbo].[FactOrders].[Quantity],[dbo].[FactOrders].[Discount],[dbo].[FactOrders].[OrderDate],[dbo].[FactOrders].[RequiredDate],[dbo].[FactOrders].[ShippedDate]
+  FROM [dbo].[FactOrders]
+		WHERE
+year(OrderDate) = 1998</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+          <CurrentStorageMode>Molap</CurrentStorageMode>
+          <ProcessingMode>Regular</ProcessingMode>
+          <ProactiveCaching dwd:design-time-name="0e804005-71be-4abb-b498-deef186aa47b">
+            <SilenceInterval>PT10S</SilenceInterval>
+            <Latency>-PT1S</Latency>
+            <SilenceOverrideInterval>PT10M</SilenceOverrideInterval>
+            <ForceRebuildInterval>-PT1S</ForceRebuildInterval>
+            <Enabled>true</Enabled>
+            <OnlineMode>OnCacheComplete</OnlineMode>
+            <AggregationStorage>MolapOnly</AggregationStorage>
+            <Source xsi:type="ProactiveCachingTablesBinding" dwd:design-time-name="5d8a54fb-70fd-4a40-b010-4d3781c19d41">
+              <NotificationTechnique>Server</NotificationTechnique>
+              <TableNotifications>
+                <TableNotification>
+                  <DbTableName>FactOrders</DbTableName>
+                  <DbSchemaName>dbo</DbSchemaName>
+                </TableNotification>
+              </TableNotifications>
+            </Source>
+          </ProactiveCaching>
+          <EstimatedRows>407</EstimatedRows>
+          <AggregationDesignID>AggregationDesign_Ad-hoc</AggregationDesignID>
+        </Partition>
+        <Partition dwd:design-time-name="1ffad1b4-7072-48df-b7b2-d0edc082330d">
+          <ID>FactOrders_YearsAgo</ID>
+          <Name>FactOrders_YearsAgo</Name>
+          <CreatedTimestamp>0001-01-01T00:00:00Z</CreatedTimestamp>
+          <LastSchemaUpdate>0001-01-01T00:00:00Z</LastSchemaUpdate>
+          <LastProcessed>0001-01-01T00:00:00Z</LastProcessed>
+          <State>Unprocessed</State>
+          <Source xsi:type="QueryBinding" dwd:design-time-name="0d66ed91-1edf-416d-b585-1bfcbac63e4a">
+            <DataSourceID>NorthwindDW</DataSourceID>
+            <QueryDefinition>SELECT [dbo].[FactOrders].[OrderID],[dbo].[FactOrders].[ProductKey],[dbo].[FactOrders].[CustomerKey],[dbo].[FactOrders].[EmployeeKey],[dbo].[FactOrders].[GeographyKey],[dbo].[FactOrders].[OrderDateKey],[dbo].[FactOrders].[RequiredDateKey],[dbo].[FactOrders].[ShippedDateKey],[dbo].[FactOrders].[ShipperKey],[dbo].[FactOrders].[ShipName],[dbo].[FactOrders].[UnitPrice],[dbo].[FactOrders].[Quantity],[dbo].[FactOrders].[Discount],[dbo].[FactOrders].[OrderDate],[dbo].[FactOrders].[RequiredDate],[dbo].[FactOrders].[ShippedDate]
+  FROM [dbo].[FactOrders]
+		WHERE
+year(OrderDate) &lt;= 1997</QueryDefinition>
+          </Source>
+          <StorageMode>Rolap</StorageMode>
+          <CurrentStorageMode>Molap</CurrentStorageMode>
+          <ProcessingMode>Regular</ProcessingMode>
+          <ProactiveCaching dwd:design-time-name="e82d1454-3cd5-4a29-816c-99bfa3ebec1d">
+            <SilenceInterval>-PT1S</SilenceInterval>
+            <Latency>PT0S</Latency>
+            <SilenceOverrideInterval>-PT1S</SilenceOverrideInterval>
+            <ForceRebuildInterval>-PT1S</ForceRebuildInterval>
+            <Enabled>true</Enabled>
+            <AggregationStorage>MolapOnly</AggregationStorage>
+            <Source xsi:type="ProactiveCachingTablesBinding" dwd:design-time-name="4006050b-f9c0-4ffa-b5d2-9fb8466f93c4">
+              <NotificationTechnique>Server</NotificationTechnique>
+              <TableNotifications>
+                <TableNotification>
+                  <DbTableName>FactOrders</DbTableName>
+                  <DbSchemaName>dbo</DbSchemaName>
+                </TableNotification>
+              </TableNotifications>
+            </Source>
+          </ProactiveCaching>
+          <EstimatedRows>1467</EstimatedRows>
+          <AggregationDesignID>AggregationDesign_UsageBased</AggregationDesignID>
+        </Partition>
+        <Partition dwd:design-time-name="4c6b5ac1-7871-494d-a480-f0c6f791f5e8">
+          <ID>FactOrders_1997</ID>
+          <Name>FactOrders_1997</Name>
+          <CreatedTimestamp>0001-01-01T00:00:00Z</CreatedTimestamp>
+          <LastSchemaUpdate>0001-01-01T00:00:00Z</LastSchemaUpdate>
+          <LastProcessed>0001-01-01T00:00:00Z</LastProcessed>
+          <State>Unprocessed</State>
+          <Source xsi:type="QueryBinding" dwd:design-time-name="1ab83125-a870-4f5e-ac11-dfe4394cfeb0">
+            <DataSourceID>NorthwindDW</DataSourceID>
+            <QueryDefinition>SELECT [dbo].[FactOrders].[OrderID],[dbo].[FactOrders].[ProductKey],[dbo].[FactOrders].[CustomerKey],[dbo].[FactOrders].[EmployeeKey],[dbo].[FactOrders].[GeographyKey],[dbo].[FactOrders].[OrderDateKey],[dbo].[FactOrders].[RequiredDateKey],[dbo].[FactOrders].[ShippedDateKey],[dbo].[FactOrders].[ShipperKey],[dbo].[FactOrders].[ShipName],[dbo].[FactOrders].[UnitPrice],[dbo].[FactOrders].[Quantity],[dbo].[FactOrders].[Discount],[dbo].[FactOrders].[OrderDate],[dbo].[FactOrders].[RequiredDate],[dbo].[FactOrders].[ShippedDate]
+  FROM [dbo].[FactOrders]
+		WHERE
+year(OrderDate) = 1997</QueryDefinition>
+          </Source>
+          <StorageMode>Holap</StorageMode>
+          <CurrentStorageMode>Molap</CurrentStorageMode>
+          <ProcessingMode>Regular</ProcessingMode>
+          <ProactiveCaching dwd:design-time-name="80c69b94-e834-4f6a-9d42-3e98e8f779de">
+            <SilenceInterval>PT0S</SilenceInterval>
+            <Latency>PT0S</Latency>
+            <SilenceOverrideInterval>-PT1S</SilenceOverrideInterval>
+            <ForceRebuildInterval>-PT1S</ForceRebuildInterval>
+            <Enabled>true</Enabled>
+            <AggregationStorage>MolapOnly</AggregationStorage>
+            <Source xsi:type="ProactiveCachingTablesBinding" dwd:design-time-name="71372b05-e5e6-47e5-8247-345049703d5b">
+              <NotificationTechnique>Server</NotificationTechnique>
+              <TableNotifications>
+                <TableNotification>
+                  <DbTableName>FactOrders</DbTableName>
+                  <DbSchemaName>dbo</DbSchemaName>
+                </TableNotification>
+              </TableNotifications>
+            </Source>
+          </ProactiveCaching>
+          <EstimatedRows>1060</EstimatedRows>
+          <AggregationDesignID>AggregationDesign_Ad-hoc</AggregationDesignID>
+        </Partition>
+      </Partitions>
+      <AggregationDesigns>
+        <AggregationDesign>
+          <ID>AggregationDesign_UsageBased</ID>
+          <Name>AggregationDesign_UsageBased</Name>
+          <CreatedTimestamp>2026-03-25T08:32:39.926667Z</CreatedTimestamp>
+          <LastSchemaUpdate>2026-03-25T08:32:39.926667Z</LastSchemaUpdate>
+          <EstimatedRows>2158</EstimatedRows>
+          <Dimensions>
+            <Dimension>
+              <CubeDimensionID>DimShippers</CubeDimensionID>
+              <Attributes>
+                <Attribute>
+                  <AttributeID>Shipper Key</AttributeID>
+                  <EstimatedCount>3</EstimatedCount>
+                </Attribute>
+              </Attributes>
+            </Dimension>
+            <Dimension>
+              <CubeDimensionID>DimCustomers</CubeDimensionID>
+              <Attributes>
+                <Attribute>
+                  <AttributeID>Customer Key</AttributeID>
+                  <EstimatedCount>92</EstimatedCount>
+                </Attribute>
+                <Attribute>
+                  <AttributeID>Contact Name</AttributeID>
+                  <EstimatedCount>91</EstimatedCount>
+                </Attribute>
+                <Attribute>
+                  <AttributeID>Contact Title</AttributeID>
+                  <EstimatedCount>12</EstimatedCount>
+                </Attribute>
+                <Attribute>
+                  <AttributeID>Geography Key</AttributeID>
+                  <EstimatedCount>128</EstimatedCount>
+                </Attribute>
+              </Attributes>
+            </Dimension>
+            <Dimension>
+              <CubeDimensionID>Order Date</CubeDimensionID>
+              <Attributes>
+                <Attribute>
+                  <AttributeID>Date Key</AttributeID>
+                  <EstimatedCount>1096</EstimatedCount>
+                </Attribute>
+                <Attribute>
+                  <AttributeID>Year Number</AttributeID>
+                  <EstimatedCount>3</EstimatedCount>
+                </Attribute>
+                <Attribute>
+                  <AttributeID>Quarter Number</AttributeID>
+                  <EstimatedCount>12</EstimatedCount>
+                </Attribute>
+                <Attribute>
+                  <AttributeID>Month Number</AttributeID>
+                  <EstimatedCount>36</EstimatedCount>
+                </Attribute>
+                <Attribute>
+                  <AttributeID>Day Number Of Month</AttributeID>
+                  <EstimatedCount>1096</EstimatedCount>
+                </Attribute>
+              </Attributes>
+            </Dimension>
+            <Dimension>
+              <CubeDimensionID>DimEmployees</CubeDimensionID>
+              <Attributes>
+                <Attribute>
+                  <AttributeID>Employee Key</AttributeID>
+                  <EstimatedCount>9</EstimatedCount>
+                </Attribute>
+                <Attribute>
+                  <AttributeID>Reports To Key</AttributeID>
+                  <EstimatedCount>2</EstimatedCount>
+                </Attribute>
+                <Attribute>
+                  <AttributeID>Title</AttributeID>
+                  <EstimatedCount>4</EstimatedCount>
+                </Attribute>
+                <Attribute>
+                  <AttributeID>Age</AttributeID>
+                  <EstimatedCount>8</EstimatedCount>
+                </Attribute>
+                <Attribute>
+                  <AttributeID>Work Experience</AttributeID>
+                  <EstimatedCount>3</EstimatedCount>
+                </Attribute>
+                <Attribute>
+                  <AttributeID>Geography Key</AttributeID>
+                  <EstimatedCount>128</EstimatedCount>
+                </Attribute>
+              </Attributes>
+            </Dimension>
+            <Dimension>
+              <CubeDimensionID>Required Date</CubeDimensionID>
+              <Attributes>
+                <Attribute>
+                  <AttributeID>Date Key</AttributeID>
+                  <EstimatedCount>1096</EstimatedCount>
+                </Attribute>
+                <Attribute>
+                  <AttributeID>Year Number</AttributeID>
+                  <EstimatedCount>3</EstimatedCount>
+                </Attribute>
+                <Attribute>
+                  <AttributeID>Quarter Number</AttributeID>
+                  <EstimatedCount>12</EstimatedCount>
+                </Attribute>
+                <Attribute>
+                  <AttributeID>Month Number</AttributeID>
+                  <EstimatedCount>36</EstimatedCount>
+                </Attribute>
+                <Attribute>
+                  <AttributeID>Day Number Of Month</AttributeID>
+                  <EstimatedCount>1096</EstimatedCount>
+                </Attribute>
+              </Attributes>
+            </Dimension>
+            <Dimension>
+              <CubeDimensionID>Shipped Date</CubeDimensionID>
+              <Attributes>
+                <Attribute>
+                  <AttributeID>Date Key</AttributeID>
+                  <EstimatedCount>1096</EstimatedCount>
+                </Attribute>
+                <Attribute>
+                  <AttributeID>Year Number</AttributeID>
+                  <EstimatedCount>3</EstimatedCount>
+                </Attribute>
+                <Attribute>
+                  <AttributeID>Quarter Number</AttributeID>
+                  <EstimatedCount>12</EstimatedCount>
+                </Attribute>
+                <Attribute>
+                  <AttributeID>Month Number</AttributeID>
+                  <EstimatedCount>36</EstimatedCount>
+                </Attribute>
+                <Attribute>
+                  <AttributeID>Day Number Of Month</AttributeID>
+                  <EstimatedCount>1096</EstimatedCount>
+                </Attribute>
+              </Attributes>
+            </Dimension>
+            <Dimension>
+              <CubeDimensionID>DimProducts</CubeDimensionID>
+              <Attributes>
+                <Attribute>
+                  <AttributeID>Product Key</AttributeID>
+                  <EstimatedCount>78</EstimatedCount>
+                </Attribute>
+                <Attribute>
+                  <AttributeID>Category Name</AttributeID>
+                  <EstimatedCount>8</EstimatedCount>
+                </Attribute>
+                <Attribute>
+                  <AttributeID>Unit Price</AttributeID>
+                  <EstimatedCount>62</EstimatedCount>
+                </Attribute>
+                <Attribute>
+                  <AttributeID>Supplier Key</AttributeID>
+                  <EstimatedCount>29</EstimatedCount>
+                </Attribute>
+                <Attribute>
+                  <AttributeID>Geography Key</AttributeID>
+                  <EstimatedCount>128</EstimatedCount>
+                </Attribute>
+              </Attributes>
+            </Dimension>
+            <Dimension>
+              <CubeDimensionID>DimGeography</CubeDimensionID>
+              <Attributes>
+                <Attribute>
+                  <AttributeID>Geography Key</AttributeID>
+                  <EstimatedCount>128</EstimatedCount>
+                </Attribute>
+                <Attribute>
+                  <AttributeID>Country</AttributeID>
+                  <EstimatedCount>25</EstimatedCount>
+                </Attribute>
+                <Attribute>
+                  <AttributeID>Region</AttributeID>
+                  <EstimatedCount>45</EstimatedCount>
+                </Attribute>
+                <Attribute>
+                  <AttributeID>City</AttributeID>
+                  <EstimatedCount>97</EstimatedCount>
+                </Attribute>
+                <Attribute>
+                  <AttributeID>Address</AttributeID>
+                  <EstimatedCount>127</EstimatedCount>
+                </Attribute>
+              </Attributes>
+            </Dimension>
+            <Dimension>
+              <CubeDimensionID>DimSuppliers</CubeDimensionID>
+              <Attributes>
+                <Attribute>
+                  <AttributeID>Supplier Key</AttributeID>
+                  <EstimatedCount>29</EstimatedCount>
+                </Attribute>
+                <Attribute>
+                  <AttributeID>Contact Name</AttributeID>
+                  <EstimatedCount>29</EstimatedCount>
+                </Attribute>
+                <Attribute>
+                  <AttributeID>Contact Title</AttributeID>
+                  <EstimatedCount>15</EstimatedCount>
+                </Attribute>
+                <Attribute>
+                  <AttributeID>Geography Key</AttributeID>
+                  <EstimatedCount>128</EstimatedCount>
+                </Attribute>
+              </Attributes>
+            </Dimension>
+            <Dimension>
+              <CubeDimensionID>DimOrders</CubeDimensionID>
+              <Attributes>
+                <Attribute>
+                  <AttributeID>Order ID</AttributeID>
+                  <EstimatedCount>2158</EstimatedCount>
+                </Attribute>
+                <Attribute>
+                  <AttributeID>Shipper Key</AttributeID>
+                  <EstimatedCount>3</EstimatedCount>
+                </Attribute>
+                <Attribute>
+                  <AttributeID>Customer Key</AttributeID>
+                  <EstimatedCount>90</EstimatedCount>
+                </Attribute>
+                <Attribute>
+                  <AttributeID>Order Date Key</AttributeID>
+                  <EstimatedCount>480</EstimatedCount>
+                </Attribute>
+                <Attribute>
+                  <AttributeID>Employee Key</AttributeID>
+                  <EstimatedCount>9</EstimatedCount>
+                </Attribute>
+                <Attribute>
+                  <AttributeID>Required Date Key</AttributeID>
+                  <EstimatedCount>454</EstimatedCount>
+                </Attribute>
+                <Attribute>
+                  <AttributeID>Shipped Date Key</AttributeID>
+                  <EstimatedCount>387</EstimatedCount>
+                </Attribute>
+                <Attribute>
+                  <AttributeID>Geography Key</AttributeID>
+                  <EstimatedCount>85</EstimatedCount>
+                </Attribute>
+                <Attribute>
+                  <AttributeID>Product Key</AttributeID>
+                  <EstimatedCount>77</EstimatedCount>
+                </Attribute>
+              </Attributes>
+            </Dimension>
+          </Dimensions>
+          <Aggregations>
+            <Aggregation>
+              <ID>Aggregation 0</ID>
+              <Name>Aggregation 0</Name>
+              <Dimensions>
+                <Dimension>
+                  <CubeDimensionID>DimShippers</CubeDimensionID>
+                </Dimension>
+                <Dimension>
+                  <CubeDimensionID>DimCustomers</CubeDimensionID>
+                </Dimension>
+                <Dimension>
+                  <CubeDimensionID>Order Date</CubeDimensionID>
+                  <Attributes>
+                    <Attribute>
+                      <AttributeID>Year Number</AttributeID>
+                    </Attribute>
+                  </Attributes>
+                </Dimension>
+                <Dimension>
+                  <CubeDimensionID>DimEmployees</CubeDimensionID>
+                </Dimension>
+                <Dimension>
+                  <CubeDimensionID>Required Date</CubeDimensionID>
+                </Dimension>
+                <Dimension>
+                  <CubeDimensionID>Shipped Date</CubeDimensionID>
+                </Dimension>
+                <Dimension>
+                  <CubeDimensionID>DimProducts</CubeDimensionID>
+                </Dimension>
+                <Dimension>
+                  <CubeDimensionID>DimTerritory</CubeDimensionID>
+                </Dimension>
+                <Dimension>
+                  <CubeDimensionID>DimGeography</CubeDimensionID>
+                </Dimension>
+                <Dimension>
+                  <CubeDimensionID>DimSuppliers</CubeDimensionID>
+                </Dimension>
+                <Dimension>
+                  <CubeDimensionID>DimOrders</CubeDimensionID>
+                </Dimension>
+              </Dimensions>
+            </Aggregation>
+          </Aggregations>
+        </AggregationDesign>
+        <AggregationDesign>
+          <ID>AggregationDesign_Ad-hoc</ID>
+          <Name>AggregationDesign_Ad-hoc</Name>
+          <CreatedTimestamp>0001-01-01T00:00:00Z</CreatedTimestamp>
+          <LastSchemaUpdate>0001-01-01T00:00:00Z</LastSchemaUpdate>
+          <EstimatedRows>2158</EstimatedRows>
+          <Dimensions>
+            <Dimension>
+              <CubeDimensionID>DimShippers</CubeDimensionID>
+              <Attributes>
+                <Attribute>
+                  <AttributeID>Shipper Key</AttributeID>
+                </Attribute>
+              </Attributes>
+            </Dimension>
+            <Dimension>
+              <CubeDimensionID>DimCustomers</CubeDimensionID>
+              <Attributes>
+                <Attribute>
+                  <AttributeID>Customer Key</AttributeID>
+                </Attribute>
+              </Attributes>
+            </Dimension>
+            <Dimension>
+              <CubeDimensionID>Order Date</CubeDimensionID>
+              <Attributes>
+                <Attribute>
+                  <AttributeID>Date Key</AttributeID>
+                </Attribute>
+              </Attributes>
+            </Dimension>
+            <Dimension>
+              <CubeDimensionID>DimEmployees</CubeDimensionID>
+              <Attributes>
+                <Attribute>
+                  <AttributeID>Employee Key</AttributeID>
+                </Attribute>
+              </Attributes>
+            </Dimension>
+            <Dimension>
+              <CubeDimensionID>Required Date</CubeDimensionID>
+              <Attributes>
+                <Attribute>
+                  <AttributeID>Date Key</AttributeID>
+                </Attribute>
+              </Attributes>
+            </Dimension>
+            <Dimension>
+              <CubeDimensionID>Shipped Date</CubeDimensionID>
+              <Attributes>
+                <Attribute>
+                  <AttributeID>Date Key</AttributeID>
+                </Attribute>
+              </Attributes>
+            </Dimension>
+            <Dimension>
+              <CubeDimensionID>DimProducts</CubeDimensionID>
+              <Attributes>
+                <Attribute>
+                  <AttributeID>Product Key</AttributeID>
+                </Attribute>
+              </Attributes>
+            </Dimension>
+            <Dimension>
+              <CubeDimensionID>DimGeography</CubeDimensionID>
+              <Attributes>
+                <Attribute>
+                  <AttributeID>Geography Key</AttributeID>
+                </Attribute>
+              </Attributes>
+            </Dimension>
+            <Dimension>
+              <CubeDimensionID>DimSuppliers</CubeDimensionID>
+              <Attributes>
+                <Attribute>
+                  <AttributeID>Geography Key</AttributeID>
+                </Attribute>
+              </Attributes>
+            </Dimension>
+            <Dimension>
+              <CubeDimensionID>DimOrders</CubeDimensionID>
+              <Attributes>
+                <Attribute>
+                  <AttributeID>Order ID</AttributeID>
+                </Attribute>
+              </Attributes>
+            </Dimension>
+          </Dimensions>
+          <Aggregations>
+            <Aggregation>
+              <ID>Aggregation</ID>
+              <Name>Aggregation</Name>
+              <Dimensions>
+                <Dimension>
+                  <CubeDimensionID>Order Date</CubeDimensionID>
+                  <Attributes>
+                    <Attribute>
+                      <AttributeID>Year Number</AttributeID>
+                    </Attribute>
+                  </Attributes>
+                </Dimension>
+                <Dimension>
+                  <CubeDimensionID>DimGeography</CubeDimensionID>
+                  <Attributes>
+                    <Attribute>
+                      <AttributeID>Country</AttributeID>
+                    </Attribute>
+                  </Attributes>
+                </Dimension>
+              </Dimensions>
+            </Aggregation>
+          </Aggregations>
+        </AggregationDesign>
+      </AggregationDesigns>
+    </MeasureGroup>
+    <MeasureGroup>
+      <ID>Fact Employee Territory</ID>
+      <Partitions>
+        <Partition dwd:design-time-name="5fe8c732-a94a-4ca6-b890-eeb8d409a60d">
+          <ID>Fact Employee Territory</ID>
+          <Name>Fact Employee Territory</Name>
+          <CreatedTimestamp>0001-01-01T00:00:00Z</CreatedTimestamp>
+          <LastSchemaUpdate>0001-01-01T00:00:00Z</LastSchemaUpdate>
+          <LastProcessed>0001-01-01T00:00:00Z</LastProcessed>
+          <State>Unprocessed</State>
+          <Source xsi:type="DsvTableBinding" dwd:design-time-name="6266cdf5-ee92-4555-9360-37f8a7d0a028">
+            <DataSourceViewID>NorthwindDW</DataSourceViewID>
+            <TableID>dbo_FactEmployeeTerritory</TableID>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+          <CurrentStorageMode>Molap</CurrentStorageMode>
+          <ProcessingMode>Regular</ProcessingMode>
+        </Partition>
+      </Partitions>
+    </MeasureGroup>
+  </MeasureGroups>
+</Cube>

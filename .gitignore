@@ -1,0 +1,16 @@
+.vs/
+bin/
+obj/
+*.user
+*.suo
+*.log
+*.tmp
+Northwind.mp4
+Northwind.rar
+git
+HTML.html
+*.svg
+DataBase Diagram.png
+Main Page.png
+Report Page.png
+Header.png

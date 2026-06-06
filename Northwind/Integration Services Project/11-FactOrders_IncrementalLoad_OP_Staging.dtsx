@@ -1,0 +1,1809 @@
+﻿<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="1/29/2026 1:32:38 AM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="ARTA"
+  DTS:CreatorName="ARTA\alalmas"
+  DTS:DTSID="{E866F3FB-C234-42E2-B3B6-13189CB5C103}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="16.0.5467.0"
+  DTS:LocaleID="1033"
+  DTS:ObjectName="Package1"
+  DTS:PackageType="5"
+  DTS:VersionBuild="6"
+  DTS:VersionGUID="{CA7CF98D-6D62-4F73-BE5C-113BBCD35173}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[LocalHost.ETL_Settings]"
+      DTS:CreationName="ADO.NET:System.Data.SqlClient.SqlConnection, System.Data, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+      DTS:DTSID="{C18305DD-FA7D-4160-9B40-EB1F1BB27773}"
+      DTS:ObjectName="LocalHost.ETL_Settings">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=.;Initial Catalog=ETL_Settings;Integrated Security=True;Application Name=SSIS-Package1-{C18305DD-FA7D-4160-9B40-EB1F1BB27773}LocalHost.ETL_Settings;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[LocalHost.Northwind]"
+      DTS:CreationName="ADO.NET:System.Data.SqlClient.SqlConnection, System.Data, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+      DTS:DTSID="{0E468F2F-F90E-4CEB-BC0B-05E41D2EB009}"
+      DTS:ObjectName="LocalHost.Northwind">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=.;Initial Catalog=Northwind;Integrated Security=True;Application Name=SSIS-Package1-{0E468F2F-F90E-4CEB-BC0B-05E41D2EB009}LocalHost.Northwind;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:Variables>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{9185D06B-0417-4F70-B48F-A8675BC02D3D}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="CDC_State_Orders">
+      <DTS:VariableValue
+        DTS:DataType="8"
+        xml:space="preserve"></DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Get Processing Range Orders"
+      DTS:CreationName="Attunity.CdcControlTask"
+      DTS:Description="CDC Control Task"
+      DTS:DTSID="{FE5181CF-F713-45D0-883D-D55AE7C6E6FC}"
+      DTS:ExecutableType="Attunity.CdcControlTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Get Processing Range Orders"
+      DTS:TaskContact="Attunity Ltd.; All Rights Reserved; http://www.attunity.com;"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <CDCControlTask
+          Connection="LocalHost.Northwind"
+          TaskOperation="GetProcessingRange"
+          OperationParameter=""
+          StateConnection="LocalHost.ETL_Settings"
+          StateVariable="User::CDC_State_Orders"
+          AutomaticStatePersistence="True"
+          StateName="CDC_State_Orders"
+          StateTable="[dbo].[cdc_states]"
+          CommandTimeout="30"
+          ChangeDetectionRetryInterval="10"
+          ChangeDetectionTimeout="60" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Mark Processed Range Orders"
+      DTS:CreationName="Attunity.CdcControlTask"
+      DTS:Description="CDC Control Task"
+      DTS:DTSID="{3ED9D998-C1A4-497C-8BCA-3821C7AA3FD2}"
+      DTS:ExecutableType="Attunity.CdcControlTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Mark Processed Range Orders"
+      DTS:TaskContact="Attunity Ltd.; All Rights Reserved; http://www.attunity.com;"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <CDCControlTask
+          Connection="LocalHost.Northwind"
+          TaskOperation="MarkProcessedRange"
+          OperationParameter=""
+          StateConnection="LocalHost.ETL_Settings"
+          StateVariable="User::CDC_State_Orders"
+          AutomaticStatePersistence="True"
+          StateName="CDC_State_Orders"
+          StateTable="[dbo].[cdc_states]"
+          CommandTimeout="30"
+          ChangeDetectionRetryInterval="10"
+          ChangeDetectionTimeout="60" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Orders OP_Staging"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{B335BCCB-BE55-4428-A36D-8191708ADB19}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Orders OP_Staging"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          version="1">
+          <components>
+            <component
+              refId="Package\Orders OP_Staging\CDC Source_Orders"
+              componentClassID="Microsoft.ManagedComponentHost"
+              contactInfo="Attunity Ltd.; All Rights Reserved; http://www.attunity.com;"
+              description="Reads change data from a SQL Server change table making it available for processing by downstream data-flow components. Only changes within the current processing range determined by the CDC Control task are read"
+              name="CDC Source_Orders"
+              usesDispositions="true"
+              version="9">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="An SSIS string package variable to store the CDC state of the current CDC state."
+                  expressionType="Notify"
+                  name="StateVariable"
+                  typeConverter="Attunity.SqlServer.CDCSrc.PackageVariablesTypeConverter">User::CDC_State_Orders</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the content of the metadata columns and the rows returned. Modes starting with ‘All’ return all changes and modes starting with ‘Net’ return net changes."
+                  expressionType="Notify"
+                  name="CDCProcessingMode"
+                  typeConverter="Attunity.SqlServer.CDCSrc.CdcProcessingMode">2</property>
+                <property
+                  dataType="System.String"
+                  description="The name of the CDC capture instance. By default the capture instance name is in the form of &quot;&lt;owner&gt;_&lt;table&gt;&quot;. The actual table that stores the changes is the CDC table named &quot;cdc&quot;.&quot;&lt;capture-instance&gt;_CT&quot;"
+                  expressionType="Notify"
+                  name="CaptureInstance">dbo_Orders</property>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time out."
+                  expressionType="Notify"
+                  name="CommandTimeout">30</property>
+                <property
+                  dataType="System.Boolean"
+                  description="If true, a special output column called ‘__$reprocessing ’ is added. This output column is true for each data row during the initial processing range, or when the previous CDC run&#xA;was stopped without finishing. The default value is false (the __$reprocessing output column is not generated). This special output column allows the SSIS developer to handle consistency errors differently when working on the Initial Processing Range or the previous CDC run was stopped."
+                  expressionType="Notify"
+                  name="ReprocessingIndication">false</property>
+                <property
+                  dataType="System.String"
+                  name="UserComponentTypeName">Attunity.CdcSourceComponent</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Orders OP_Staging\CDC Source_Orders.Connections[Connection]"
+                  connectionManagerID="Package.ConnectionManagers[LocalHost.Northwind]"
+                  connectionManagerRefId="Package.ConnectionManagers[LocalHost.Northwind]"
+                  name="Connection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output]"
+                  name="Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[__$start_lsn]"
+                      dataType="bytes"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].ExternalColumns[__$start_lsn]"
+                      length="10"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[__$start_lsn]"
+                      name="__$start_lsn"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[__$operation]"
+                      dataType="i4"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].ExternalColumns[__$operation]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[__$operation]"
+                      name="__$operation"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[__$update_mask]"
+                      dataType="bytes"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].ExternalColumns[__$update_mask]"
+                      length="128"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[__$update_mask]"
+                      name="__$update_mask"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[OrderID]"
+                      dataType="i4"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].ExternalColumns[OrderID]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[OrderID]"
+                      name="OrderID"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[CustomerID]"
+                      dataType="wstr"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].ExternalColumns[CustomerID]"
+                      length="5"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[CustomerID]"
+                      name="CustomerID"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[EmployeeID]"
+                      dataType="i4"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].ExternalColumns[EmployeeID]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[EmployeeID]"
+                      name="EmployeeID"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[OrderDate]"
+                      dataType="dbTimeStamp"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].ExternalColumns[OrderDate]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[OrderDate]"
+                      name="OrderDate"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[RequiredDate]"
+                      dataType="dbTimeStamp"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].ExternalColumns[RequiredDate]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[RequiredDate]"
+                      name="RequiredDate"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[ShippedDate]"
+                      dataType="dbTimeStamp"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].ExternalColumns[ShippedDate]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[ShippedDate]"
+                      name="ShippedDate"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[ShipVia]"
+                      dataType="i4"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].ExternalColumns[ShipVia]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[ShipVia]"
+                      name="ShipVia"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[Freight]"
+                      dataType="cy"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].ExternalColumns[Freight]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[Freight]"
+                      name="Freight"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[ShipName]"
+                      dataType="wstr"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].ExternalColumns[ShipName]"
+                      length="40"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[ShipName]"
+                      name="ShipName"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[ShipAddress]"
+                      dataType="wstr"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].ExternalColumns[ShipAddress]"
+                      length="60"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[ShipAddress]"
+                      name="ShipAddress"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[ShipCity]"
+                      dataType="wstr"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].ExternalColumns[ShipCity]"
+                      length="15"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[ShipCity]"
+                      name="ShipCity"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[ShipRegion]"
+                      dataType="wstr"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].ExternalColumns[ShipRegion]"
+                      length="15"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[ShipRegion]"
+                      name="ShipRegion"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[ShipPostalCode]"
+                      dataType="wstr"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].ExternalColumns[ShipPostalCode]"
+                      length="10"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[ShipPostalCode]"
+                      name="ShipPostalCode"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[ShipCountry]"
+                      dataType="wstr"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].ExternalColumns[ShipCountry]"
+                      length="15"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[ShipCountry]"
+                      name="ShipCountry"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[__$command_id]"
+                      dataType="i4"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].ExternalColumns[__$command_id]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[__$command_id]"
+                      name="__$command_id"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].ExternalColumns[__$start_lsn]"
+                      dataType="bytes"
+                      length="10"
+                      name="__$start_lsn" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].ExternalColumns[__$operation]"
+                      dataType="i4"
+                      name="__$operation" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].ExternalColumns[__$update_mask]"
+                      dataType="bytes"
+                      length="128"
+                      name="__$update_mask" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].ExternalColumns[OrderID]"
+                      dataType="i4"
+                      name="OrderID" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].ExternalColumns[CustomerID]"
+                      dataType="wstr"
+                      length="5"
+                      name="CustomerID" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].ExternalColumns[EmployeeID]"
+                      dataType="i4"
+                      name="EmployeeID" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].ExternalColumns[OrderDate]"
+                      dataType="dbTimeStamp"
+                      name="OrderDate" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].ExternalColumns[RequiredDate]"
+                      dataType="dbTimeStamp"
+                      name="RequiredDate" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].ExternalColumns[ShippedDate]"
+                      dataType="dbTimeStamp"
+                      name="ShippedDate" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].ExternalColumns[ShipVia]"
+                      dataType="i4"
+                      name="ShipVia" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].ExternalColumns[Freight]"
+                      dataType="cy"
+                      name="Freight" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].ExternalColumns[ShipName]"
+                      dataType="wstr"
+                      length="40"
+                      name="ShipName" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].ExternalColumns[ShipAddress]"
+                      dataType="wstr"
+                      length="60"
+                      name="ShipAddress" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].ExternalColumns[ShipCity]"
+                      dataType="wstr"
+                      length="15"
+                      name="ShipCity" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].ExternalColumns[ShipRegion]"
+                      dataType="wstr"
+                      length="15"
+                      name="ShipRegion" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].ExternalColumns[ShipPostalCode]"
+                      dataType="wstr"
+                      length="10"
+                      name="ShipPostalCode" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].ExternalColumns[ShipCountry]"
+                      dataType="wstr"
+                      length="15"
+                      name="ShipCountry" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].ExternalColumns[__$command_id]"
+                      dataType="i4"
+                      name="__$command_id" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[ErrorOutput]"
+                  isErrorOut="true"
+                  name="ErrorOutput">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[ErrorOutput].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[ErrorOutput].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[ErrorOutput].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[ErrorOutput].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                    <outputColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[ErrorOutput].Columns[__$start_lsn]"
+                      dataType="bytes"
+                      length="10"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[ErrorOutput].Columns[__$start_lsn]"
+                      name="__$start_lsn" />
+                    <outputColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[ErrorOutput].Columns[__$operation]"
+                      dataType="i4"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[ErrorOutput].Columns[__$operation]"
+                      name="__$operation" />
+                    <outputColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[ErrorOutput].Columns[__$update_mask]"
+                      dataType="bytes"
+                      length="128"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[ErrorOutput].Columns[__$update_mask]"
+                      name="__$update_mask" />
+                    <outputColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[ErrorOutput].Columns[OrderID]"
+                      dataType="i4"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[ErrorOutput].Columns[OrderID]"
+                      name="OrderID" />
+                    <outputColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[ErrorOutput].Columns[CustomerID]"
+                      dataType="wstr"
+                      length="5"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[ErrorOutput].Columns[CustomerID]"
+                      name="CustomerID" />
+                    <outputColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[ErrorOutput].Columns[EmployeeID]"
+                      dataType="i4"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[ErrorOutput].Columns[EmployeeID]"
+                      name="EmployeeID" />
+                    <outputColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[ErrorOutput].Columns[OrderDate]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[ErrorOutput].Columns[OrderDate]"
+                      name="OrderDate" />
+                    <outputColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[ErrorOutput].Columns[RequiredDate]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[ErrorOutput].Columns[RequiredDate]"
+                      name="RequiredDate" />
+                    <outputColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[ErrorOutput].Columns[ShippedDate]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[ErrorOutput].Columns[ShippedDate]"
+                      name="ShippedDate" />
+                    <outputColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[ErrorOutput].Columns[ShipVia]"
+                      dataType="i4"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[ErrorOutput].Columns[ShipVia]"
+                      name="ShipVia" />
+                    <outputColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[ErrorOutput].Columns[Freight]"
+                      dataType="cy"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[ErrorOutput].Columns[Freight]"
+                      name="Freight" />
+                    <outputColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[ErrorOutput].Columns[ShipName]"
+                      dataType="wstr"
+                      length="40"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[ErrorOutput].Columns[ShipName]"
+                      name="ShipName" />
+                    <outputColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[ErrorOutput].Columns[ShipAddress]"
+                      dataType="wstr"
+                      length="60"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[ErrorOutput].Columns[ShipAddress]"
+                      name="ShipAddress" />
+                    <outputColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[ErrorOutput].Columns[ShipCity]"
+                      dataType="wstr"
+                      length="15"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[ErrorOutput].Columns[ShipCity]"
+                      name="ShipCity" />
+                    <outputColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[ErrorOutput].Columns[ShipRegion]"
+                      dataType="wstr"
+                      length="15"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[ErrorOutput].Columns[ShipRegion]"
+                      name="ShipRegion" />
+                    <outputColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[ErrorOutput].Columns[ShipPostalCode]"
+                      dataType="wstr"
+                      length="10"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[ErrorOutput].Columns[ShipPostalCode]"
+                      name="ShipPostalCode" />
+                    <outputColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[ErrorOutput].Columns[ShipCountry]"
+                      dataType="wstr"
+                      length="15"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[ErrorOutput].Columns[ShipCountry]"
+                      name="ShipCountry" />
+                    <outputColumn
+                      refId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[ErrorOutput].Columns[__$command_id]"
+                      dataType="i4"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[ErrorOutput].Columns[__$command_id]"
+                      name="__$command_id" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Orders OP_Staging\CDC Splitter"
+              componentClassID="Microsoft.ManagedComponentHost"
+              contactInfo="Attunity Ltd.; All Rights Reserved; http://www.attunity.com;"
+              description="Directs a stream of net change records into different outputs based on the type of the change (Insert, Delete and Update). This allows specific handling for different types of change records."
+              name="CDC Splitter"
+              usesDispositions="true"
+              version="9">
+              <properties>
+                <property
+                  dataType="System.String"
+                  name="UserComponentTypeName">Attunity.CdcSplitterComponent</property>
+              </properties>
+              <inputs>
+                <input
+                  refId="Package\Orders OP_Staging\CDC Splitter.Inputs[Input]"
+                  errorOrTruncationOperation="Operation of the changed row is not a valid one"
+                  errorRowDisposition="FailComponent"
+                  name="Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\CDC Splitter.Inputs[Input].Columns[__$start_lsn]"
+                      cachedDataType="bytes"
+                      cachedLength="10"
+                      cachedName="__$start_lsn"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[__$start_lsn]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\CDC Splitter.Inputs[Input].Columns[__$operation]"
+                      cachedDataType="i4"
+                      cachedName="__$operation"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[__$operation]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\CDC Splitter.Inputs[Input].Columns[__$update_mask]"
+                      cachedDataType="bytes"
+                      cachedLength="128"
+                      cachedName="__$update_mask"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[__$update_mask]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\CDC Splitter.Inputs[Input].Columns[OrderID]"
+                      cachedDataType="i4"
+                      cachedName="OrderID"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[OrderID]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\CDC Splitter.Inputs[Input].Columns[CustomerID]"
+                      cachedDataType="wstr"
+                      cachedLength="5"
+                      cachedName="CustomerID"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[CustomerID]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\CDC Splitter.Inputs[Input].Columns[EmployeeID]"
+                      cachedDataType="i4"
+                      cachedName="EmployeeID"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[EmployeeID]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\CDC Splitter.Inputs[Input].Columns[OrderDate]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="OrderDate"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[OrderDate]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\CDC Splitter.Inputs[Input].Columns[RequiredDate]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="RequiredDate"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[RequiredDate]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\CDC Splitter.Inputs[Input].Columns[ShippedDate]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="ShippedDate"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[ShippedDate]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\CDC Splitter.Inputs[Input].Columns[ShipVia]"
+                      cachedDataType="i4"
+                      cachedName="ShipVia"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[ShipVia]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\CDC Splitter.Inputs[Input].Columns[Freight]"
+                      cachedDataType="cy"
+                      cachedName="Freight"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[Freight]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\CDC Splitter.Inputs[Input].Columns[ShipName]"
+                      cachedDataType="wstr"
+                      cachedLength="40"
+                      cachedName="ShipName"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[ShipName]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\CDC Splitter.Inputs[Input].Columns[ShipAddress]"
+                      cachedDataType="wstr"
+                      cachedLength="60"
+                      cachedName="ShipAddress"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[ShipAddress]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\CDC Splitter.Inputs[Input].Columns[ShipCity]"
+                      cachedDataType="wstr"
+                      cachedLength="15"
+                      cachedName="ShipCity"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[ShipCity]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\CDC Splitter.Inputs[Input].Columns[ShipRegion]"
+                      cachedDataType="wstr"
+                      cachedLength="15"
+                      cachedName="ShipRegion"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[ShipRegion]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\CDC Splitter.Inputs[Input].Columns[ShipPostalCode]"
+                      cachedDataType="wstr"
+                      cachedLength="10"
+                      cachedName="ShipPostalCode"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[ShipPostalCode]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\CDC Splitter.Inputs[Input].Columns[ShipCountry]"
+                      cachedDataType="wstr"
+                      cachedLength="15"
+                      cachedName="ShipCountry"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[ShipCountry]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\CDC Splitter.Inputs[Input].Columns[__$command_id]"
+                      cachedDataType="i4"
+                      cachedName="__$command_id"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[__$command_id]" />
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Orders OP_Staging\CDC Splitter.Outputs[InsertOutput]"
+                  exclusionGroup="1"
+                  name="InsertOutput"
+                  synchronousInputId="Package\Orders OP_Staging\CDC Splitter.Inputs[Input]">
+                  <properties>
+                    <property
+                      dataType="System.Int32"
+                      description="Output type - Insert."
+                      name="OutputType"
+                      typeConverter="Attunity.SqlServer.CDCSplit.OutputType">0</property>
+                  </properties>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Orders OP_Staging\CDC Splitter.Outputs[DeleteOutput]"
+                  exclusionGroup="1"
+                  name="DeleteOutput"
+                  synchronousInputId="Package\Orders OP_Staging\CDC Splitter.Inputs[Input]">
+                  <properties>
+                    <property
+                      dataType="System.Int32"
+                      description="Output type - Delete."
+                      name="OutputType"
+                      typeConverter="Attunity.SqlServer.CDCSplit.OutputType">2</property>
+                  </properties>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Orders OP_Staging\CDC Splitter.Outputs[UpdateOutput]"
+                  exclusionGroup="1"
+                  name="UpdateOutput"
+                  synchronousInputId="Package\Orders OP_Staging\CDC Splitter.Inputs[Input]">
+                  <properties>
+                    <property
+                      dataType="System.Int32"
+                      description="Output type - Update."
+                      name="OutputType"
+                      typeConverter="Attunity.SqlServer.CDCSplit.OutputType">1</property>
+                  </properties>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Orders OP_Staging\CDC Splitter.Outputs[ErrorOutput]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="ErrorOutput"
+                  synchronousInputId="Package\Orders OP_Staging\CDC Splitter.Inputs[Input]">
+                  <properties>
+                    <property
+                      dataType="System.Int32"
+                      description="Output type - Error."
+                      name="OutputType"
+                      typeConverter="Attunity.SqlServer.CDCSplit.OutputType">3</property>
+                  </properties>
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Orders OP_Staging\CDC Splitter.Outputs[ErrorOutput].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Orders OP_Staging\CDC Splitter.Outputs[ErrorOutput].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Orders OP_Staging\CDC Splitter.Outputs[ErrorOutput].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Orders OP_Staging\CDC Splitter.Outputs[ErrorOutput].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Orders OP_Staging\Staging_Orders_Deleted"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="Staging_Orders_Deleted"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[Staging_Orders_Deleted]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Orders OP_Staging\Staging_Orders_Deleted.Connections[OleDbConnection]"
+                  connectionManagerID="{F66D550C-20FC-4676-BC10-3FA7E51EE8F8}:external"
+                  connectionManagerRefId="Project.ConnectionManagers[Arta.NorthwindStaging]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Orders OP_Staging\Staging_Orders_Deleted.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Deleted.Inputs[OLE DB Destination Input].Columns[OrderID]"
+                      cachedDataType="i4"
+                      cachedName="OrderID"
+                      externalMetadataColumnId="Package\Orders OP_Staging\Staging_Orders_Deleted.Inputs[OLE DB Destination Input].ExternalColumns[OrderID]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[OrderID]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Deleted.Inputs[OLE DB Destination Input].Columns[CustomerID]"
+                      cachedDataType="wstr"
+                      cachedLength="5"
+                      cachedName="CustomerID"
+                      externalMetadataColumnId="Package\Orders OP_Staging\Staging_Orders_Deleted.Inputs[OLE DB Destination Input].ExternalColumns[CustomerID]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[CustomerID]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Deleted.Inputs[OLE DB Destination Input].Columns[EmployeeID]"
+                      cachedDataType="i4"
+                      cachedName="EmployeeID"
+                      externalMetadataColumnId="Package\Orders OP_Staging\Staging_Orders_Deleted.Inputs[OLE DB Destination Input].ExternalColumns[EmployeeID]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[EmployeeID]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Deleted.Inputs[OLE DB Destination Input].Columns[OrderDate]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="OrderDate"
+                      externalMetadataColumnId="Package\Orders OP_Staging\Staging_Orders_Deleted.Inputs[OLE DB Destination Input].ExternalColumns[OrderDate]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[OrderDate]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Deleted.Inputs[OLE DB Destination Input].Columns[RequiredDate]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="RequiredDate"
+                      externalMetadataColumnId="Package\Orders OP_Staging\Staging_Orders_Deleted.Inputs[OLE DB Destination Input].ExternalColumns[RequiredDate]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[RequiredDate]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Deleted.Inputs[OLE DB Destination Input].Columns[ShippedDate]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="ShippedDate"
+                      externalMetadataColumnId="Package\Orders OP_Staging\Staging_Orders_Deleted.Inputs[OLE DB Destination Input].ExternalColumns[ShippedDate]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[ShippedDate]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Deleted.Inputs[OLE DB Destination Input].Columns[ShipVia]"
+                      cachedDataType="i4"
+                      cachedName="ShipVia"
+                      externalMetadataColumnId="Package\Orders OP_Staging\Staging_Orders_Deleted.Inputs[OLE DB Destination Input].ExternalColumns[ShipVia]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[ShipVia]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Deleted.Inputs[OLE DB Destination Input].Columns[Freight]"
+                      cachedDataType="cy"
+                      cachedName="Freight"
+                      externalMetadataColumnId="Package\Orders OP_Staging\Staging_Orders_Deleted.Inputs[OLE DB Destination Input].ExternalColumns[Freight]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[Freight]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Deleted.Inputs[OLE DB Destination Input].Columns[ShipName]"
+                      cachedDataType="wstr"
+                      cachedLength="40"
+                      cachedName="ShipName"
+                      externalMetadataColumnId="Package\Orders OP_Staging\Staging_Orders_Deleted.Inputs[OLE DB Destination Input].ExternalColumns[ShipName]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[ShipName]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Deleted.Inputs[OLE DB Destination Input].Columns[ShipAddress]"
+                      cachedDataType="wstr"
+                      cachedLength="60"
+                      cachedName="ShipAddress"
+                      externalMetadataColumnId="Package\Orders OP_Staging\Staging_Orders_Deleted.Inputs[OLE DB Destination Input].ExternalColumns[ShipAddress]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[ShipAddress]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Deleted.Inputs[OLE DB Destination Input].Columns[ShipCity]"
+                      cachedDataType="wstr"
+                      cachedLength="15"
+                      cachedName="ShipCity"
+                      externalMetadataColumnId="Package\Orders OP_Staging\Staging_Orders_Deleted.Inputs[OLE DB Destination Input].ExternalColumns[ShipCity]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[ShipCity]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Deleted.Inputs[OLE DB Destination Input].Columns[ShipRegion]"
+                      cachedDataType="wstr"
+                      cachedLength="15"
+                      cachedName="ShipRegion"
+                      externalMetadataColumnId="Package\Orders OP_Staging\Staging_Orders_Deleted.Inputs[OLE DB Destination Input].ExternalColumns[ShipRegion]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[ShipRegion]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Deleted.Inputs[OLE DB Destination Input].Columns[ShipPostalCode]"
+                      cachedDataType="wstr"
+                      cachedLength="10"
+                      cachedName="ShipPostalCode"
+                      externalMetadataColumnId="Package\Orders OP_Staging\Staging_Orders_Deleted.Inputs[OLE DB Destination Input].ExternalColumns[ShipPostalCode]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[ShipPostalCode]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Deleted.Inputs[OLE DB Destination Input].Columns[ShipCountry]"
+                      cachedDataType="wstr"
+                      cachedLength="15"
+                      cachedName="ShipCountry"
+                      externalMetadataColumnId="Package\Orders OP_Staging\Staging_Orders_Deleted.Inputs[OLE DB Destination Input].ExternalColumns[ShipCountry]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[ShipCountry]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Deleted.Inputs[OLE DB Destination Input].ExternalColumns[OrderID]"
+                      dataType="i4"
+                      name="OrderID" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Deleted.Inputs[OLE DB Destination Input].ExternalColumns[CustomerID]"
+                      dataType="wstr"
+                      length="5"
+                      name="CustomerID" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Deleted.Inputs[OLE DB Destination Input].ExternalColumns[EmployeeID]"
+                      dataType="i4"
+                      name="EmployeeID" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Deleted.Inputs[OLE DB Destination Input].ExternalColumns[OrderDate]"
+                      dataType="dbTimeStamp"
+                      name="OrderDate" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Deleted.Inputs[OLE DB Destination Input].ExternalColumns[RequiredDate]"
+                      dataType="dbTimeStamp"
+                      name="RequiredDate" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Deleted.Inputs[OLE DB Destination Input].ExternalColumns[ShippedDate]"
+                      dataType="dbTimeStamp"
+                      name="ShippedDate" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Deleted.Inputs[OLE DB Destination Input].ExternalColumns[ShipVia]"
+                      dataType="i4"
+                      name="ShipVia" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Deleted.Inputs[OLE DB Destination Input].ExternalColumns[Freight]"
+                      dataType="cy"
+                      name="Freight" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Deleted.Inputs[OLE DB Destination Input].ExternalColumns[ShipName]"
+                      dataType="wstr"
+                      length="40"
+                      name="ShipName" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Deleted.Inputs[OLE DB Destination Input].ExternalColumns[ShipAddress]"
+                      dataType="wstr"
+                      length="60"
+                      name="ShipAddress" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Deleted.Inputs[OLE DB Destination Input].ExternalColumns[ShipCity]"
+                      dataType="wstr"
+                      length="15"
+                      name="ShipCity" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Deleted.Inputs[OLE DB Destination Input].ExternalColumns[ShipRegion]"
+                      dataType="wstr"
+                      length="15"
+                      name="ShipRegion" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Deleted.Inputs[OLE DB Destination Input].ExternalColumns[ShipPostalCode]"
+                      dataType="wstr"
+                      length="10"
+                      name="ShipPostalCode" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Deleted.Inputs[OLE DB Destination Input].ExternalColumns[ShipCountry]"
+                      dataType="wstr"
+                      length="15"
+                      name="ShipCountry" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Orders OP_Staging\Staging_Orders_Deleted.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\Orders OP_Staging\Staging_Orders_Deleted.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Deleted.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Orders OP_Staging\Staging_Orders_Deleted.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Deleted.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Orders OP_Staging\Staging_Orders_Deleted.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Orders OP_Staging\Staging_Orders_Inserted"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="Staging_Orders_Inserted"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[Staging_Orders_Inserted]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Orders OP_Staging\Staging_Orders_Inserted.Connections[OleDbConnection]"
+                  connectionManagerID="{F66D550C-20FC-4676-BC10-3FA7E51EE8F8}:external"
+                  connectionManagerRefId="Project.ConnectionManagers[Arta.NorthwindStaging]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Orders OP_Staging\Staging_Orders_Inserted.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Inserted.Inputs[OLE DB Destination Input].Columns[OrderID]"
+                      cachedDataType="i4"
+                      cachedName="OrderID"
+                      externalMetadataColumnId="Package\Orders OP_Staging\Staging_Orders_Inserted.Inputs[OLE DB Destination Input].ExternalColumns[OrderID]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[OrderID]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Inserted.Inputs[OLE DB Destination Input].Columns[CustomerID]"
+                      cachedDataType="wstr"
+                      cachedLength="5"
+                      cachedName="CustomerID"
+                      externalMetadataColumnId="Package\Orders OP_Staging\Staging_Orders_Inserted.Inputs[OLE DB Destination Input].ExternalColumns[CustomerID]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[CustomerID]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Inserted.Inputs[OLE DB Destination Input].Columns[EmployeeID]"
+                      cachedDataType="i4"
+                      cachedName="EmployeeID"
+                      externalMetadataColumnId="Package\Orders OP_Staging\Staging_Orders_Inserted.Inputs[OLE DB Destination Input].ExternalColumns[EmployeeID]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[EmployeeID]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Inserted.Inputs[OLE DB Destination Input].Columns[OrderDate]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="OrderDate"
+                      externalMetadataColumnId="Package\Orders OP_Staging\Staging_Orders_Inserted.Inputs[OLE DB Destination Input].ExternalColumns[OrderDate]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[OrderDate]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Inserted.Inputs[OLE DB Destination Input].Columns[RequiredDate]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="RequiredDate"
+                      externalMetadataColumnId="Package\Orders OP_Staging\Staging_Orders_Inserted.Inputs[OLE DB Destination Input].ExternalColumns[RequiredDate]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[RequiredDate]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Inserted.Inputs[OLE DB Destination Input].Columns[ShippedDate]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="ShippedDate"
+                      externalMetadataColumnId="Package\Orders OP_Staging\Staging_Orders_Inserted.Inputs[OLE DB Destination Input].ExternalColumns[ShippedDate]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[ShippedDate]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Inserted.Inputs[OLE DB Destination Input].Columns[ShipVia]"
+                      cachedDataType="i4"
+                      cachedName="ShipVia"
+                      externalMetadataColumnId="Package\Orders OP_Staging\Staging_Orders_Inserted.Inputs[OLE DB Destination Input].ExternalColumns[ShipVia]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[ShipVia]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Inserted.Inputs[OLE DB Destination Input].Columns[Freight]"
+                      cachedDataType="cy"
+                      cachedName="Freight"
+                      externalMetadataColumnId="Package\Orders OP_Staging\Staging_Orders_Inserted.Inputs[OLE DB Destination Input].ExternalColumns[Freight]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[Freight]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Inserted.Inputs[OLE DB Destination Input].Columns[ShipName]"
+                      cachedDataType="wstr"
+                      cachedLength="40"
+                      cachedName="ShipName"
+                      externalMetadataColumnId="Package\Orders OP_Staging\Staging_Orders_Inserted.Inputs[OLE DB Destination Input].ExternalColumns[ShipName]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[ShipName]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Inserted.Inputs[OLE DB Destination Input].Columns[ShipAddress]"
+                      cachedDataType="wstr"
+                      cachedLength="60"
+                      cachedName="ShipAddress"
+                      externalMetadataColumnId="Package\Orders OP_Staging\Staging_Orders_Inserted.Inputs[OLE DB Destination Input].ExternalColumns[ShipAddress]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[ShipAddress]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Inserted.Inputs[OLE DB Destination Input].Columns[ShipCity]"
+                      cachedDataType="wstr"
+                      cachedLength="15"
+                      cachedName="ShipCity"
+                      externalMetadataColumnId="Package\Orders OP_Staging\Staging_Orders_Inserted.Inputs[OLE DB Destination Input].ExternalColumns[ShipCity]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[ShipCity]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Inserted.Inputs[OLE DB Destination Input].Columns[ShipRegion]"
+                      cachedDataType="wstr"
+                      cachedLength="15"
+                      cachedName="ShipRegion"
+                      externalMetadataColumnId="Package\Orders OP_Staging\Staging_Orders_Inserted.Inputs[OLE DB Destination Input].ExternalColumns[ShipRegion]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[ShipRegion]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Inserted.Inputs[OLE DB Destination Input].Columns[ShipPostalCode]"
+                      cachedDataType="wstr"
+                      cachedLength="10"
+                      cachedName="ShipPostalCode"
+                      externalMetadataColumnId="Package\Orders OP_Staging\Staging_Orders_Inserted.Inputs[OLE DB Destination Input].ExternalColumns[ShipPostalCode]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[ShipPostalCode]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Inserted.Inputs[OLE DB Destination Input].Columns[ShipCountry]"
+                      cachedDataType="wstr"
+                      cachedLength="15"
+                      cachedName="ShipCountry"
+                      externalMetadataColumnId="Package\Orders OP_Staging\Staging_Orders_Inserted.Inputs[OLE DB Destination Input].ExternalColumns[ShipCountry]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[ShipCountry]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Inserted.Inputs[OLE DB Destination Input].ExternalColumns[OrderID]"
+                      dataType="i4"
+                      name="OrderID" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Inserted.Inputs[OLE DB Destination Input].ExternalColumns[CustomerID]"
+                      dataType="wstr"
+                      length="5"
+                      name="CustomerID" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Inserted.Inputs[OLE DB Destination Input].ExternalColumns[EmployeeID]"
+                      dataType="i4"
+                      name="EmployeeID" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Inserted.Inputs[OLE DB Destination Input].ExternalColumns[OrderDate]"
+                      dataType="dbTimeStamp"
+                      name="OrderDate" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Inserted.Inputs[OLE DB Destination Input].ExternalColumns[RequiredDate]"
+                      dataType="dbTimeStamp"
+                      name="RequiredDate" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Inserted.Inputs[OLE DB Destination Input].ExternalColumns[ShippedDate]"
+                      dataType="dbTimeStamp"
+                      name="ShippedDate" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Inserted.Inputs[OLE DB Destination Input].ExternalColumns[ShipVia]"
+                      dataType="i4"
+                      name="ShipVia" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Inserted.Inputs[OLE DB Destination Input].ExternalColumns[Freight]"
+                      dataType="cy"
+                      name="Freight" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Inserted.Inputs[OLE DB Destination Input].ExternalColumns[ShipName]"
+                      dataType="wstr"
+                      length="40"
+                      name="ShipName" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Inserted.Inputs[OLE DB Destination Input].ExternalColumns[ShipAddress]"
+                      dataType="wstr"
+                      length="60"
+                      name="ShipAddress" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Inserted.Inputs[OLE DB Destination Input].ExternalColumns[ShipCity]"
+                      dataType="wstr"
+                      length="15"
+                      name="ShipCity" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Inserted.Inputs[OLE DB Destination Input].ExternalColumns[ShipRegion]"
+                      dataType="wstr"
+                      length="15"
+                      name="ShipRegion" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Inserted.Inputs[OLE DB Destination Input].ExternalColumns[ShipPostalCode]"
+                      dataType="wstr"
+                      length="10"
+                      name="ShipPostalCode" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Inserted.Inputs[OLE DB Destination Input].ExternalColumns[ShipCountry]"
+                      dataType="wstr"
+                      length="15"
+                      name="ShipCountry" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Orders OP_Staging\Staging_Orders_Inserted.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\Orders OP_Staging\Staging_Orders_Inserted.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Inserted.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Orders OP_Staging\Staging_Orders_Inserted.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Inserted.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Orders OP_Staging\Staging_Orders_Inserted.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Orders OP_Staging\Staging_Orders_Updated"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="Staging_Orders_Updated"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[Staging_Orders_Updated]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Orders OP_Staging\Staging_Orders_Updated.Connections[OleDbConnection]"
+                  connectionManagerID="{F66D550C-20FC-4676-BC10-3FA7E51EE8F8}:external"
+                  connectionManagerRefId="Project.ConnectionManagers[Arta.NorthwindStaging]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Orders OP_Staging\Staging_Orders_Updated.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Updated.Inputs[OLE DB Destination Input].Columns[OrderID]"
+                      cachedDataType="i4"
+                      cachedName="OrderID"
+                      externalMetadataColumnId="Package\Orders OP_Staging\Staging_Orders_Updated.Inputs[OLE DB Destination Input].ExternalColumns[OrderID]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[OrderID]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Updated.Inputs[OLE DB Destination Input].Columns[CustomerID]"
+                      cachedDataType="wstr"
+                      cachedLength="5"
+                      cachedName="CustomerID"
+                      externalMetadataColumnId="Package\Orders OP_Staging\Staging_Orders_Updated.Inputs[OLE DB Destination Input].ExternalColumns[CustomerID]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[CustomerID]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Updated.Inputs[OLE DB Destination Input].Columns[EmployeeID]"
+                      cachedDataType="i4"
+                      cachedName="EmployeeID"
+                      externalMetadataColumnId="Package\Orders OP_Staging\Staging_Orders_Updated.Inputs[OLE DB Destination Input].ExternalColumns[EmployeeID]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[EmployeeID]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Updated.Inputs[OLE DB Destination Input].Columns[OrderDate]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="OrderDate"
+                      externalMetadataColumnId="Package\Orders OP_Staging\Staging_Orders_Updated.Inputs[OLE DB Destination Input].ExternalColumns[OrderDate]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[OrderDate]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Updated.Inputs[OLE DB Destination Input].Columns[RequiredDate]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="RequiredDate"
+                      externalMetadataColumnId="Package\Orders OP_Staging\Staging_Orders_Updated.Inputs[OLE DB Destination Input].ExternalColumns[RequiredDate]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[RequiredDate]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Updated.Inputs[OLE DB Destination Input].Columns[ShippedDate]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="ShippedDate"
+                      externalMetadataColumnId="Package\Orders OP_Staging\Staging_Orders_Updated.Inputs[OLE DB Destination Input].ExternalColumns[ShippedDate]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[ShippedDate]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Updated.Inputs[OLE DB Destination Input].Columns[ShipVia]"
+                      cachedDataType="i4"
+                      cachedName="ShipVia"
+                      externalMetadataColumnId="Package\Orders OP_Staging\Staging_Orders_Updated.Inputs[OLE DB Destination Input].ExternalColumns[ShipVia]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[ShipVia]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Updated.Inputs[OLE DB Destination Input].Columns[Freight]"
+                      cachedDataType="cy"
+                      cachedName="Freight"
+                      externalMetadataColumnId="Package\Orders OP_Staging\Staging_Orders_Updated.Inputs[OLE DB Destination Input].ExternalColumns[Freight]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[Freight]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Updated.Inputs[OLE DB Destination Input].Columns[ShipName]"
+                      cachedDataType="wstr"
+                      cachedLength="40"
+                      cachedName="ShipName"
+                      externalMetadataColumnId="Package\Orders OP_Staging\Staging_Orders_Updated.Inputs[OLE DB Destination Input].ExternalColumns[ShipName]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[ShipName]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Updated.Inputs[OLE DB Destination Input].Columns[ShipAddress]"
+                      cachedDataType="wstr"
+                      cachedLength="60"
+                      cachedName="ShipAddress"
+                      externalMetadataColumnId="Package\Orders OP_Staging\Staging_Orders_Updated.Inputs[OLE DB Destination Input].ExternalColumns[ShipAddress]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[ShipAddress]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Updated.Inputs[OLE DB Destination Input].Columns[ShipCity]"
+                      cachedDataType="wstr"
+                      cachedLength="15"
+                      cachedName="ShipCity"
+                      externalMetadataColumnId="Package\Orders OP_Staging\Staging_Orders_Updated.Inputs[OLE DB Destination Input].ExternalColumns[ShipCity]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[ShipCity]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Updated.Inputs[OLE DB Destination Input].Columns[ShipRegion]"
+                      cachedDataType="wstr"
+                      cachedLength="15"
+                      cachedName="ShipRegion"
+                      externalMetadataColumnId="Package\Orders OP_Staging\Staging_Orders_Updated.Inputs[OLE DB Destination Input].ExternalColumns[ShipRegion]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[ShipRegion]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Updated.Inputs[OLE DB Destination Input].Columns[ShipPostalCode]"
+                      cachedDataType="wstr"
+                      cachedLength="10"
+                      cachedName="ShipPostalCode"
+                      externalMetadataColumnId="Package\Orders OP_Staging\Staging_Orders_Updated.Inputs[OLE DB Destination Input].ExternalColumns[ShipPostalCode]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[ShipPostalCode]" />
+                    <inputColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Updated.Inputs[OLE DB Destination Input].Columns[ShipCountry]"
+                      cachedDataType="wstr"
+                      cachedLength="15"
+                      cachedName="ShipCountry"
+                      externalMetadataColumnId="Package\Orders OP_Staging\Staging_Orders_Updated.Inputs[OLE DB Destination Input].ExternalColumns[ShipCountry]"
+                      lineageId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output].Columns[ShipCountry]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Updated.Inputs[OLE DB Destination Input].ExternalColumns[OrderID]"
+                      dataType="i4"
+                      name="OrderID" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Updated.Inputs[OLE DB Destination Input].ExternalColumns[CustomerID]"
+                      dataType="wstr"
+                      length="5"
+                      name="CustomerID" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Updated.Inputs[OLE DB Destination Input].ExternalColumns[EmployeeID]"
+                      dataType="i4"
+                      name="EmployeeID" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Updated.Inputs[OLE DB Destination Input].ExternalColumns[OrderDate]"
+                      dataType="dbTimeStamp"
+                      name="OrderDate" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Updated.Inputs[OLE DB Destination Input].ExternalColumns[RequiredDate]"
+                      dataType="dbTimeStamp"
+                      name="RequiredDate" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Updated.Inputs[OLE DB Destination Input].ExternalColumns[ShippedDate]"
+                      dataType="dbTimeStamp"
+                      name="ShippedDate" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Updated.Inputs[OLE DB Destination Input].ExternalColumns[ShipVia]"
+                      dataType="i4"
+                      name="ShipVia" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Updated.Inputs[OLE DB Destination Input].ExternalColumns[Freight]"
+                      dataType="cy"
+                      name="Freight" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Updated.Inputs[OLE DB Destination Input].ExternalColumns[ShipName]"
+                      dataType="wstr"
+                      length="40"
+                      name="ShipName" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Updated.Inputs[OLE DB Destination Input].ExternalColumns[ShipAddress]"
+                      dataType="wstr"
+                      length="60"
+                      name="ShipAddress" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Updated.Inputs[OLE DB Destination Input].ExternalColumns[ShipCity]"
+                      dataType="wstr"
+                      length="15"
+                      name="ShipCity" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Updated.Inputs[OLE DB Destination Input].ExternalColumns[ShipRegion]"
+                      dataType="wstr"
+                      length="15"
+                      name="ShipRegion" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Updated.Inputs[OLE DB Destination Input].ExternalColumns[ShipPostalCode]"
+                      dataType="wstr"
+                      length="10"
+                      name="ShipPostalCode" />
+                    <externalMetadataColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Updated.Inputs[OLE DB Destination Input].ExternalColumns[ShipCountry]"
+                      dataType="wstr"
+                      length="15"
+                      name="ShipCountry" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Orders OP_Staging\Staging_Orders_Updated.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\Orders OP_Staging\Staging_Orders_Updated.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Updated.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Orders OP_Staging\Staging_Orders_Updated.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Orders OP_Staging\Staging_Orders_Updated.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Orders OP_Staging\Staging_Orders_Updated.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\Orders OP_Staging.Paths[DeleteOutput]"
+              endId="Package\Orders OP_Staging\Staging_Orders_Deleted.Inputs[OLE DB Destination Input]"
+              name="DeleteOutput"
+              startId="Package\Orders OP_Staging\CDC Splitter.Outputs[DeleteOutput]" />
+            <path
+              refId="Package\Orders OP_Staging.Paths[InsertOutput]"
+              endId="Package\Orders OP_Staging\Staging_Orders_Inserted.Inputs[OLE DB Destination Input]"
+              name="InsertOutput"
+              startId="Package\Orders OP_Staging\CDC Splitter.Outputs[InsertOutput]" />
+            <path
+              refId="Package\Orders OP_Staging.Paths[Output]"
+              endId="Package\Orders OP_Staging\CDC Splitter.Inputs[Input]"
+              name="Output"
+              startId="Package\Orders OP_Staging\CDC Source_Orders.Outputs[Output]" />
+            <path
+              refId="Package\Orders OP_Staging.Paths[UpdateOutput]"
+              endId="Package\Orders OP_Staging\Staging_Orders_Updated.Inputs[OLE DB Destination Input]"
+              name="UpdateOutput"
+              startId="Package\Orders OP_Staging\CDC Splitter.Outputs[UpdateOutput]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 1]"
+      DTS:CreationName=""
+      DTS:DTSID="{6FF3A403-0014-4E83-8FC6-1856ECC4D558}"
+      DTS:From="Package\Get Processing Range Orders"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 1"
+      DTS:To="Package\Orders OP_Staging" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 2]"
+      DTS:CreationName=""
+      DTS:DTSID="{79D482CD-CD38-4997-86B3-CCCC5D828534}"
+      DTS:From="Package\Orders OP_Staging"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 2"
+      DTS:To="Package\Mark Processed Range Orders" />
+  </DTS:PrecedenceConstraints>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="217.333333333334,42.6666666666667"
+          Id="Package\Get Processing Range Orders"
+          TopLeft="206.874996917322,198.899996443391" />
+        <NodeLayout
+          Size="221.333333333334,42.6666666666667"
+          Id="Package\Mark Processed Range Orders"
+          TopLeft="204.374996954575,432.249992270768" />
+        <NodeLayout
+          Size="169.333333333334,42.6666666666667"
+          Id="Package\Orders OP_Staging"
+          TopLeft="233.124996526167,317.849994316399" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 1]"
+          TopLeft="316.666663388411,241.566663110057">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,76.2833312063416"
+              Start="0,0"
+              End="0,68.7833312063416">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,68.7833312063416" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 2]"
+          TopLeft="316.416663407038,360.516660983066">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,71.733331287702"
+              Start="0,0"
+              End="0,64.233331287702">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,64.233331287702" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <TaskHost
+    design-time-name="Package\Orders OP_Staging">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="172,42.6666666666667"
+          Id="Package\Orders OP_Staging\CDC Source_Orders"
+          TopLeft="326.874995129183,65.6499988260865" />
+        <NodeLayout
+          Size="136,42.6666666666667"
+          Id="Package\Orders OP_Staging\CDC Splitter"
+          TopLeft="344.374994868413,166.399997024536" />
+        <EdgeLayout
+          Id="Package\Orders OP_Staging.Paths[Output]"
+          TopLeft="412.624994998798,108.316665492753">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58.083331531783"
+              Start="0,0"
+              End="0,50.583331531783">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,50.583331531783" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="196.666666666667,42.6666666666667"
+          Id="Package\Orders OP_Staging\Staging_Orders_Inserted"
+          TopLeft="48.1249992828816,360.09999356091" />
+        <NodeLayout
+          Size="197.333333333334,42.6666666666667"
+          Id="Package\Orders OP_Staging\Staging_Orders_Updated"
+          TopLeft="309.374995389953,428.999992328882" />
+        <NodeLayout
+          Size="194.666666666667,42.6666666666667"
+          Id="Package\Orders OP_Staging\Staging_Orders_Deleted"
+          TopLeft="609.999990910292,377.649993247092" />
+        <EdgeLayout
+          Id="Package\Orders OP_Staging.Paths[InsertOutput]"
+          TopLeft="380.374994868413,209.066663691203">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-233.916662252198,151.033329869707"
+              Start="0,0"
+              End="-233.916662252198,143.533329869707">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,48.2807680318218" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,48.2807680318218"
+                    Point2="0,52.2807680318218"
+                    Point3="-4,52.2807680318218" />
+                  <mssgle:LineSegment
+                    End="-229.916662252198,52.2807680318218" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-229.916662252198,52.2807680318218"
+                    Point2="-233.916662252198,52.2807680318218"
+                    Point3="-233.916662252198,56.2807680318218" />
+                  <mssgle:LineSegment
+                    End="-233.916662252198,143.533329869707" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-145.936319407349,57.2807680318218,57.9559765625,11.43359375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Orders OP_Staging.Paths[UpdateOutput]"
+          TopLeft="410.208328462516,209.066663691203">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,219.933328637679"
+              Start="0,0"
+              End="0,212.433328637679">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,212.433328637679" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-31.63033203125,100.41197681884,63.2606640625,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Orders OP_Staging.Paths[DeleteOutput]"
+          TopLeft="444.374994868413,209.066663691203">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="262.958329375212,168.583329555889"
+              Start="0,0"
+              End="262.958329375212,161.083329555889">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,54.3557679231923" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,54.3557679231923"
+                    Point2="0,58.3557679231923"
+                    Point3="4,58.3557679231923" />
+                  <mssgle:LineSegment
+                    End="258.958329375212,58.3557679231923" />
+                  <mssgle:CubicBezierSegment
+                    Point1="258.958329375212,58.3557679231923"
+                    Point2="262.958329375212,58.3557679231923"
+                    Point3="262.958329375212,62.3557679231923" />
+                  <mssgle:LineSegment
+                    End="262.958329375212,161.083329555889" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="101.532777968856,63.3557679231923,59.8927734375,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Orders OP_Staging\Staging_Orders_Inserted">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Orders OP_Staging\CDC Source_Orders">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Orders OP_Staging\Staging_Orders_Deleted">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Orders OP_Staging\Staging_Orders_Updated">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>

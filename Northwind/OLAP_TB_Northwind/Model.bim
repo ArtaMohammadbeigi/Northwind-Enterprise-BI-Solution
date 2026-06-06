@@ -1,0 +1,1281 @@
+{
+  "name": "SemanticModel",
+  "compatibilityLevel": 1500,
+  "model": {
+    "culture": "en-US",
+    "dataSources": [
+      {
+        "type": "structured",
+        "name": "SQL/ARTA;NorthwindDW",
+        "connectionDetails": {
+          "protocol": "tds",
+          "address": {
+            "server": "ARTA",
+            "database": "NorthwindDW"
+          },
+          "authentication": null,
+          "query": null
+        },
+        "options": {},
+        "credential": {
+          "AuthenticationKind": "UsernamePassword",
+          "kind": "SQL",
+          "path": "arta;NorthwindDW",
+          "Username": "sa",
+          "EncryptConnection": false
+        }
+      }
+    ],
+    "tables": [
+      {
+        "name": "DimCustomers",
+        "columns": [
+          {
+            "name": "CustomerKey",
+            "dataType": "int64",
+            "sourceColumn": "CustomerKey"
+          },
+          {
+            "name": "GeographyKey",
+            "dataType": "int64",
+            "sourceColumn": "GeographyKey"
+          },
+          {
+            "name": "CompanyName",
+            "dataType": "string",
+            "sourceColumn": "CompanyName"
+          },
+          {
+            "name": "ContactName",
+            "dataType": "string",
+            "sourceColumn": "ContactName"
+          },
+          {
+            "name": "ContactTitle",
+            "dataType": "string",
+            "sourceColumn": "ContactTitle"
+          },
+          {
+            "name": "Startdate",
+            "dataType": "dateTime",
+            "sourceColumn": "Startdate"
+          },
+          {
+            "name": "Enddate",
+            "dataType": "dateTime",
+            "sourceColumn": "Enddate"
+          },
+          {
+            "type": "calculated",
+            "name": "Tier_Number",
+            "dataType": "int64",
+            "isDataTypeInferred": true,
+            "expression": [
+              "",
+              "VAR TotalOrders =",
+              "    CALCULATE(DISTINCTCOUNT(FactOrders[OrderID]))",
+              "",
+              "VAR Q1 =",
+              "    PERCENTILEX.INC(",
+              "        ALL(DimCustomers),",
+              "        CALCULATE(DISTINCTCOUNT(FactOrders[OrderID])),",
+              "        0.25",
+              "    )",
+              "",
+              "VAR Q2 =",
+              "    PERCENTILEX.INC(",
+              "        ALL(DimCustomers),",
+              "        CALCULATE(DISTINCTCOUNT(FactOrders[OrderID])),",
+              "        0.50",
+              "    )",
+              "",
+              "VAR Q3 =",
+              "    PERCENTILEX.INC(",
+              "        ALL(DimCustomers),",
+              "        CALCULATE(DISTINCTCOUNT(FactOrders[OrderID])),",
+              "        0.75",
+              "    )",
+              "",
+              "RETURN",
+              "SWITCH(",
+              "    TRUE(),",
+              "    TotalOrders >= Q3, 4,",
+              "    TotalOrders >= Q2, 3,",
+              "    TotalOrders >= Q1, 2,",
+              "    1",
+              ")"
+            ]
+          },
+          {
+            "type": "calculated",
+            "name": "Customer_Tier",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": [
+              "",
+              "SWITCH(",
+              "    [Tier_Number],",
+              "    4, \"Royal\",",
+              "    3, \"Gold\",",
+              "    2, \"Silver\",",
+              "    1, \"Bronze\"",
+              ")"
+            ],
+            "sortByColumn": "Tier_Number"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Partition",
+            "dataView": "full",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = #\"SQL/ARTA;NorthwindDW\",",
+                "    dbo_DimCustomers = Source{[Schema=\"dbo\",Item=\"DimCustomers\"]}[Data],",
+                "    #\"Removed Columns\" = Table.RemoveColumns(dbo_DimCustomers,{\"CustomerAlternateKey\", \"Phone\", \"Fax\"})",
+                "in",
+                "    #\"Removed Columns\""
+              ]
+            }
+          }
+        ],
+        "measures": [
+          {
+            "name": "Total Customers",
+            "expression": " DISTINCTCOUNT(DimCustomers[CustomerKey])",
+            "displayFolder": "Customers"
+          },
+          {
+            "name": "Avg Revenue per Customer",
+            "expression": [
+              "",
+              "DIVIDE([Total Sales], [Total Customers])"
+            ],
+            "formatString": "\\$#,0.00;(\\$#,0.00);\\$#,0.00",
+            "displayFolder": "Customers",
+            "annotations": [
+              {
+                "name": "Format",
+                "value": "<Format Format=\"Currency\" Accuracy=\"2\"><Currency LCID=\"1033\" DisplayName=\"$ English (United States)\" Symbol=\"$\" PositivePattern=\"0\" NegativePattern=\"0\" /></Format>"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "DimDate",
+        "columns": [
+          {
+            "name": "DateKey",
+            "dataType": "int64",
+            "sourceColumn": "DateKey"
+          },
+          {
+            "name": "FullDate",
+            "dataType": "dateTime",
+            "sourceColumn": "FullDate"
+          },
+          {
+            "name": "YearNumber",
+            "dataType": "int64",
+            "sourceColumn": "YearNumber"
+          },
+          {
+            "name": "QuarterNumber",
+            "dataType": "int64",
+            "sourceColumn": "QuarterNumber"
+          },
+          {
+            "name": "MonthNumber",
+            "dataType": "int64",
+            "sourceColumn": "MonthNumber"
+          },
+          {
+            "name": "MonthName",
+            "dataType": "string",
+            "sourceColumn": "MonthName",
+            "sortByColumn": "MonthNumber"
+          },
+          {
+            "name": "DayNumberOfMonth",
+            "dataType": "int64",
+            "sourceColumn": "DayNumberOfMonth"
+          },
+          {
+            "name": "DayOfWeekNumber",
+            "dataType": "int64",
+            "sourceColumn": "DayOfWeekNumber"
+          },
+          {
+            "name": "DayName",
+            "dataType": "string",
+            "sourceColumn": "DayName"
+          },
+          {
+            "name": "WeekOfYear",
+            "dataType": "int64",
+            "sourceColumn": "WeekOfYear"
+          },
+          {
+            "type": "calculated",
+            "name": "Season",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": [
+              " SWITCH(TRUE(),",
+              "DimDate[QuarterNumber] = 1, \"Winter\",",
+              "DimDate[QuarterNumber] = 2, \"Spring\",",
+              "DimDate[QuarterNumber] = 3, \"Summer\",",
+              "DimDate[QuarterNumber] = 4, \"Fall\")"
+            ],
+            "sortByColumn": "QuarterNumber"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Partition",
+            "dataView": "full",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = #\"SQL/ARTA;NorthwindDW\",",
+                "    dbo_DimDate = Source{[Schema=\"dbo\",Item=\"DimDate\"]}[Data]",
+                "in",
+                "    dbo_DimDate"
+              ]
+            }
+          }
+        ],
+        "hierarchies": [
+          {
+            "name": "Year_Month_Day",
+            "levels": [
+              {
+                "name": "YearNumber",
+                "ordinal": 0,
+                "column": "YearNumber"
+              },
+              {
+                "name": "MonthName",
+                "ordinal": 1,
+                "column": "MonthName"
+              },
+              {
+                "name": "DayNumberOfMonth",
+                "ordinal": 2,
+                "column": "DayNumberOfMonth"
+              }
+            ]
+          },
+          {
+            "name": "Year_Quarter",
+            "levels": [
+              {
+                "name": "YearNumber",
+                "ordinal": 0,
+                "column": "YearNumber"
+              },
+              {
+                "name": "Season",
+                "ordinal": 1,
+                "column": "Season"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "DimEmployees",
+        "columns": [
+          {
+            "name": "EmployeeKey",
+            "dataType": "int64",
+            "sourceColumn": "EmployeeKey"
+          },
+          {
+            "name": "ReportsToKey",
+            "dataType": "int64",
+            "sourceColumn": "ReportsToKey"
+          },
+          {
+            "name": "GeographyKey",
+            "dataType": "int64",
+            "sourceColumn": "GeographyKey"
+          },
+          {
+            "name": "LastName",
+            "dataType": "string",
+            "sourceColumn": "LastName"
+          },
+          {
+            "name": "FirstName",
+            "dataType": "string",
+            "sourceColumn": "FirstName"
+          },
+          {
+            "name": "Title",
+            "dataType": "string",
+            "sourceColumn": "Title"
+          },
+          {
+            "name": "TitleOfCourtesy",
+            "dataType": "string",
+            "sourceColumn": "TitleOfCourtesy"
+          },
+          {
+            "name": "BirthDate",
+            "dataType": "dateTime",
+            "sourceColumn": "BirthDate"
+          },
+          {
+            "name": "HireDate",
+            "dataType": "dateTime",
+            "sourceColumn": "HireDate"
+          },
+          {
+            "name": "Startdate",
+            "dataType": "dateTime",
+            "sourceColumn": "Startdate"
+          },
+          {
+            "name": "Enddate",
+            "dataType": "dateTime",
+            "sourceColumn": "Enddate"
+          },
+          {
+            "type": "calculated",
+            "name": "FullName",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": " DimEmployees[FirstName] & \" \" & DimEmployees[LastName]"
+          },
+          {
+            "type": "calculated",
+            "name": "Age",
+            "dataType": "int64",
+            "isDataTypeInferred": true,
+            "expression": " DATEDIFF(DimEmployees[BirthDate], TODAY(),YEAR)"
+          },
+          {
+            "type": "calculated",
+            "name": "EmployeePath",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": "PATH(DimEmployees[EmployeeKey],DimEmployees[ReportsToKey])"
+          },
+          {
+            "type": "calculated",
+            "name": "LenPath",
+            "dataType": "int64",
+            "isDataTypeInferred": true,
+            "expression": "PATHLENGTH(DimEmployees[EmployeePath])"
+          },
+          {
+            "type": "calculated",
+            "name": "Level1",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": [
+              "",
+              "LOOKUPVALUE(",
+              "    DimEmployees[FullName],",
+              "    DimEmployees[EmployeeKey],",
+              "    PATHITEM(DimEmployees[EmployeePath], 1, INTEGER) ",
+              ")"
+            ]
+          },
+          {
+            "type": "calculated",
+            "name": "Level2",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": [
+              "",
+              "LOOKUPVALUE(",
+              "    DimEmployees[FullName],",
+              "    DimEmployees[EmployeeKey],",
+              "    PATHITEM(DimEmployees[EmployeePath], 2, INTEGER)",
+              ")"
+            ]
+          },
+          {
+            "type": "calculated",
+            "name": "Level3",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": [
+              "",
+              "LOOKUPVALUE(",
+              "    DimEmployees[FullName],",
+              "    DimEmployees[EmployeeKey],",
+              "    PATHITEM(DimEmployees[EmployeePath], 3, INTEGER)",
+              ")"
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Partition",
+            "dataView": "full",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = #\"SQL/ARTA;NorthwindDW\",",
+                "    dbo_DimEmployees = Source{[Schema=\"dbo\",Item=\"DimEmployees\"]}[Data],",
+                "    #\"Removed Columns\" = Table.RemoveColumns(dbo_DimEmployees,{\"EmployeeAlternateKey\", \"HomePhone\", \"Extension\", \"Photo\", \"Notes\", \"ReportsTo\", \"PhotoPath\"})",
+                "in",
+                "    #\"Removed Columns\""
+              ]
+            }
+          }
+        ],
+        "measures": [
+          {
+            "name": "Avg Work Experience",
+            "expression": [
+              "",
+              "AVERAGEX(",
+              "    DimEmployees,",
+              "    DATEDIFF(",
+              "        DimEmployees[HireDate],",
+              "        COALESCE(DimEmployees[EndDate], TODAY()),",
+              "        YEAR",
+              "    )",
+              ")"
+            ],
+            "displayFolder": "Employees"
+          },
+          {
+            "name": "Avg Age",
+            "expression": " AVERAGE(DimEmployees[Age])",
+            "displayFolder": "Employees"
+          },
+          {
+            "name": "Total Employees",
+            "expression": [
+              "",
+              "DISTINCTCOUNT(DimEmployees[EmployeeKey])"
+            ],
+            "displayFolder": "Employees"
+          }
+        ],
+        "hierarchies": [
+          {
+            "name": "EmployeeHierarchy",
+            "hideMembers": "hideBlankMembers",
+            "levels": [
+              {
+                "name": "Level_1",
+                "ordinal": 0,
+                "column": "Level1"
+              },
+              {
+                "name": "Level_2",
+                "ordinal": 1,
+                "column": "Level2"
+              },
+              {
+                "name": "Level_3",
+                "ordinal": 2,
+                "column": "Level3"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "DimGeography",
+        "columns": [
+          {
+            "name": "GeographyKey",
+            "dataType": "int64",
+            "sourceColumn": "GeographyKey"
+          },
+          {
+            "name": "Country",
+            "dataType": "string",
+            "sourceColumn": "Country"
+          },
+          {
+            "name": "Region",
+            "dataType": "string",
+            "sourceColumn": "Region"
+          },
+          {
+            "name": "City",
+            "dataType": "string",
+            "sourceColumn": "City"
+          },
+          {
+            "name": "PostalCode",
+            "dataType": "string",
+            "sourceColumn": "PostalCode"
+          },
+          {
+            "name": "Address",
+            "dataType": "string",
+            "sourceColumn": "Address"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Partition",
+            "dataView": "full",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = #\"SQL/ARTA;NorthwindDW\",",
+                "    dbo_DimGeography = Source{[Schema=\"dbo\",Item=\"DimGeography\"]}[Data]",
+                "in",
+                "    dbo_DimGeography"
+              ]
+            }
+          }
+        ],
+        "hierarchies": [
+          {
+            "name": "Country_City",
+            "levels": [
+              {
+                "name": "Country",
+                "ordinal": 0,
+                "column": "Country"
+              },
+              {
+                "name": "City",
+                "ordinal": 1,
+                "column": "City"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "DimProducts",
+        "columns": [
+          {
+            "name": "ProductKey",
+            "dataType": "int64",
+            "sourceColumn": "ProductKey"
+          },
+          {
+            "name": "SupplierKey",
+            "dataType": "int64",
+            "sourceColumn": "SupplierKey"
+          },
+          {
+            "name": "ProductName",
+            "dataType": "string",
+            "sourceColumn": "ProductName"
+          },
+          {
+            "name": "CategoryName",
+            "dataType": "string",
+            "sourceColumn": "CategoryName"
+          },
+          {
+            "name": "QuantityPerUnit",
+            "dataType": "string",
+            "sourceColumn": "QuantityPerUnit"
+          },
+          {
+            "name": "UnitPrice",
+            "dataType": "decimal",
+            "sourceColumn": "UnitPrice"
+          },
+          {
+            "name": "UnitsInStock",
+            "dataType": "int64",
+            "sourceColumn": "UnitsInStock"
+          },
+          {
+            "name": "UnitsOnOrder",
+            "dataType": "int64",
+            "sourceColumn": "UnitsOnOrder"
+          },
+          {
+            "name": "ReorderLevel",
+            "dataType": "int64",
+            "sourceColumn": "ReorderLevel"
+          },
+          {
+            "name": "Discontinued",
+            "dataType": "boolean",
+            "sourceColumn": "Discontinued"
+          },
+          {
+            "name": "Startdate",
+            "dataType": "dateTime",
+            "sourceColumn": "Startdate"
+          },
+          {
+            "name": "Enddate",
+            "dataType": "dateTime",
+            "sourceColumn": "Enddate"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Partition",
+            "dataView": "full",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = #\"SQL/ARTA;NorthwindDW\",",
+                "    dbo_DimProducts = Source{[Schema=\"dbo\",Item=\"DimProducts\"]}[Data],",
+                "    #\"Removed Columns\" = Table.RemoveColumns(dbo_DimProducts,{\"ProductAlternateKey\"})",
+                "in",
+                "    #\"Removed Columns\""
+              ]
+            }
+          }
+        ],
+        "measures": [
+          {
+            "name": "Number of Products",
+            "expression": " DISTINCTCOUNT(DimProducts[ProductKey])",
+            "displayFolder": "Products"
+          },
+          {
+            "name": "Number of Category",
+            "expression": " DISTINCTCOUNT(DimProducts[CategoryName])",
+            "displayFolder": "Products"
+          },
+          {
+            "name": "Number of Supplier Company",
+            "expression": " DISTINCTCOUNT(DimProducts[SupplierKey])",
+            "displayFolder": "Products"
+          },
+          {
+            "name": "Average of UnitPrice",
+            "expression": "AVERAGE([UnitPrice])",
+            "formatString": "\\$#,0.00;(\\$#,0.00);\\$#,0.00",
+            "displayFolder": "Products",
+            "annotations": [
+              {
+                "name": "Format",
+                "value": "<Format Format=\"Currency\" Accuracy=\"2\" ThousandSeparator=\"True\"><Currency LCID=\"1033\" DisplayName=\"$ English (United States)\" Symbol=\"$\" PositivePattern=\"0\" NegativePattern=\"0\" /></Format>"
+              }
+            ]
+          }
+        ],
+        "hierarchies": [
+          {
+            "name": "Category_Product",
+            "levels": [
+              {
+                "name": "CategoryName",
+                "ordinal": 0,
+                "column": "CategoryName"
+              },
+              {
+                "name": "ProductName",
+                "ordinal": 1,
+                "column": "ProductName"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "DimShippers",
+        "columns": [
+          {
+            "name": "ShipperKey",
+            "dataType": "int64",
+            "sourceColumn": "ShipperKey"
+          },
+          {
+            "name": "CompanyName",
+            "dataType": "string",
+            "sourceColumn": "CompanyName"
+          },
+          {
+            "name": "Phone",
+            "dataType": "string",
+            "sourceColumn": "Phone"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Partition",
+            "dataView": "full",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = #\"SQL/ARTA;NorthwindDW\",",
+                "    dbo_DimShippers = Source{[Schema=\"dbo\",Item=\"DimShippers\"]}[Data],",
+                "    #\"Removed Columns\" = Table.RemoveColumns(dbo_DimShippers,{\"ShipperAlternateKey\"})",
+                "in",
+                "    #\"Removed Columns\""
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "DimSuppliers",
+        "columns": [
+          {
+            "name": "SupplierKey",
+            "dataType": "int64",
+            "sourceColumn": "SupplierKey"
+          },
+          {
+            "name": "GeographyKey",
+            "dataType": "int64",
+            "sourceColumn": "GeographyKey"
+          },
+          {
+            "name": "CompanyName",
+            "dataType": "string",
+            "sourceColumn": "CompanyName"
+          },
+          {
+            "name": "ContactName",
+            "dataType": "string",
+            "sourceColumn": "ContactName"
+          },
+          {
+            "name": "ContactTitle",
+            "dataType": "string",
+            "sourceColumn": "ContactTitle"
+          },
+          {
+            "name": "Startdate",
+            "dataType": "dateTime",
+            "sourceColumn": "Startdate"
+          },
+          {
+            "name": "Enddate",
+            "dataType": "dateTime",
+            "sourceColumn": "Enddate"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Partition",
+            "dataView": "full",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = #\"SQL/ARTA;NorthwindDW\",",
+                "    dbo_DimSuppliers = Source{[Schema=\"dbo\",Item=\"DimSuppliers\"]}[Data],",
+                "    #\"Removed Columns\" = Table.RemoveColumns(dbo_DimSuppliers,{\"SupplierAlternateKey\", \"Phone\", \"Fax\", \"HomePage\"})",
+                "in",
+                "    #\"Removed Columns\""
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "DimTerritory",
+        "columns": [
+          {
+            "name": "TerritoryKey",
+            "dataType": "int64",
+            "sourceColumn": "TerritoryKey"
+          },
+          {
+            "name": "TerritoryDescription",
+            "dataType": "string",
+            "sourceColumn": "TerritoryDescription"
+          },
+          {
+            "name": "RegionDescription",
+            "dataType": "string",
+            "sourceColumn": "RegionDescription"
+          },
+          {
+            "name": "Startdate",
+            "dataType": "dateTime",
+            "sourceColumn": "Startdate"
+          },
+          {
+            "name": "Enddate",
+            "dataType": "dateTime",
+            "sourceColumn": "Enddate"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Partition",
+            "dataView": "full",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = #\"SQL/ARTA;NorthwindDW\",",
+                "    dbo_DimTerritory = Source{[Schema=\"dbo\",Item=\"DimTerritory\"]}[Data],",
+                "    #\"Removed Columns\" = Table.RemoveColumns(dbo_DimTerritory,{\"TerritoryAlternateKey\"})",
+                "in",
+                "    #\"Removed Columns\""
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "FactEmployeeTerritory",
+        "columns": [
+          {
+            "name": "EmployeeKey",
+            "dataType": "int64",
+            "sourceColumn": "EmployeeKey"
+          },
+          {
+            "name": "TerritoryKey",
+            "dataType": "int64",
+            "sourceColumn": "TerritoryKey"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Partition",
+            "dataView": "full",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = #\"SQL/ARTA;NorthwindDW\",",
+                "    dbo_FactEmployeeTerritory = Source{[Schema=\"dbo\",Item=\"FactEmployeeTerritory\"]}[Data]",
+                "in",
+                "    dbo_FactEmployeeTerritory"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "FactOrders",
+        "columns": [
+          {
+            "name": "OrderID",
+            "dataType": "int64",
+            "sourceColumn": "OrderID"
+          },
+          {
+            "name": "ProductKey",
+            "dataType": "int64",
+            "sourceColumn": "ProductKey"
+          },
+          {
+            "name": "CustomerKey",
+            "dataType": "int64",
+            "sourceColumn": "CustomerKey"
+          },
+          {
+            "name": "EmployeeKey",
+            "dataType": "int64",
+            "sourceColumn": "EmployeeKey"
+          },
+          {
+            "name": "GeographyKey",
+            "dataType": "int64",
+            "sourceColumn": "GeographyKey"
+          },
+          {
+            "name": "OrderDateKey",
+            "dataType": "int64",
+            "sourceColumn": "OrderDateKey"
+          },
+          {
+            "name": "RequiredDateKey",
+            "dataType": "int64",
+            "sourceColumn": "RequiredDateKey"
+          },
+          {
+            "name": "ShippedDateKey",
+            "dataType": "int64",
+            "sourceColumn": "ShippedDateKey"
+          },
+          {
+            "name": "ShipperKey",
+            "dataType": "int64",
+            "sourceColumn": "ShipperKey"
+          },
+          {
+            "name": "ShipName",
+            "dataType": "string",
+            "sourceColumn": "ShipName"
+          },
+          {
+            "name": "UnitPrice",
+            "dataType": "decimal",
+            "sourceColumn": "UnitPrice"
+          },
+          {
+            "name": "Quantity",
+            "dataType": "int64",
+            "sourceColumn": "Quantity"
+          },
+          {
+            "name": "Discount",
+            "dataType": "double",
+            "sourceColumn": "Discount"
+          },
+          {
+            "name": "OrderDate",
+            "dataType": "dateTime",
+            "sourceColumn": "OrderDate"
+          },
+          {
+            "name": "RequiredDate",
+            "dataType": "dateTime",
+            "sourceColumn": "RequiredDate"
+          },
+          {
+            "name": "ShippedDate",
+            "dataType": "dateTime",
+            "sourceColumn": "ShippedDate"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Partition",
+            "dataView": "full",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = #\"SQL/ARTA;NorthwindDW\",",
+                "    dbo_FactOrders = Source{[Schema=\"dbo\",Item=\"FactOrders\"]}[Data]",
+                "in",
+                "    dbo_FactOrders"
+              ]
+            }
+          }
+        ],
+        "measures": [
+          {
+            "name": "Distinct Count of OrderID",
+            "expression": "DISTINCTCOUNT([OrderID])",
+            "formatString": "#,#",
+            "displayFolder": "Orders"
+          },
+          {
+            "name": "Total Sales",
+            "expression": [
+              "",
+              "SUMX(",
+              "    FactOrders,",
+              "    FactOrders[Quantity] * FactOrders[UnitPrice] * (1 - FactOrders[Discount])",
+              ")"
+            ],
+            "formatString": "\\$#,0.00;(\\$#,0.00);\\$#,0.00",
+            "displayFolder": "Orders",
+            "annotations": [
+              {
+                "name": "Format",
+                "value": "<Format Format=\"Currency\" Accuracy=\"2\"><Currency LCID=\"1033\" DisplayName=\"$ English (United States)\" Symbol=\"$\" PositivePattern=\"0\" NegativePattern=\"0\" /></Format>"
+              }
+            ]
+          },
+          {
+            "name": "Avg Order Value",
+            "expression": [
+              "",
+              "DIVIDE([Total Sales], [Distinct Count of OrderID])"
+            ],
+            "formatString": "\\$#,0.00;(\\$#,0.00);\\$#,0.00",
+            "displayFolder": "Orders",
+            "annotations": [
+              {
+                "name": "Format",
+                "value": "<Format Format=\"Currency\" Accuracy=\"2\"><Currency LCID=\"1033\" DisplayName=\"$ English (United States)\" Symbol=\"$\" PositivePattern=\"0\" NegativePattern=\"0\" /></Format>"
+              }
+            ]
+          },
+          {
+            "name": "Total Discount",
+            "expression": [
+              "",
+              "SUMX(",
+              "    FactOrders,",
+              "    FactOrders[Quantity] * FactOrders[UnitPrice] * (FactOrders[Discount])",
+              ")"
+            ],
+            "formatString": "\\$#,0.00;(\\$#,0.00);\\$#,0.00",
+            "displayFolder": "Orders",
+            "annotations": [
+              {
+                "name": "Format",
+                "value": "<Format Format=\"Currency\" Accuracy=\"2\"><Currency LCID=\"1033\" DisplayName=\"$ English (United States)\" Symbol=\"$\" PositivePattern=\"0\" NegativePattern=\"0\" /></Format>"
+              }
+            ]
+          },
+          {
+            "name": "Total Sales Amount",
+            "expression": [
+              "",
+              "SUMX(",
+              "    FactOrders,",
+              "    FactOrders[Quantity] * FactOrders[UnitPrice] ",
+              ")"
+            ],
+            "formatString": "\\$#,0.00;(\\$#,0.00);\\$#,0.00",
+            "displayFolder": "Orders",
+            "annotations": [
+              {
+                "name": "Format",
+                "value": "<Format Format=\"Currency\" Accuracy=\"2\"><Currency LCID=\"1033\" DisplayName=\"$ English (United States)\" Symbol=\"$\" PositivePattern=\"0\" NegativePattern=\"0\" /></Format>"
+              }
+            ]
+          },
+          {
+            "name": "Avg Shipping Days",
+            "expression": [
+              "",
+              "AVERAGEX(",
+              "    FactOrders,",
+              "    DATEDIFF(FactOrders[OrderDate], FactOrders[ShippedDate], DAY)",
+              ")",
+              ""
+            ],
+            "displayFolder": "Orders"
+          },
+          {
+            "name": "Avg Discount",
+            "expression": [
+              "",
+              "AVERAGEX(",
+              "    FactOrders,",
+              "    FactOrders[Quantity] * FactOrders[UnitPrice] * (FactOrders[Discount])",
+              ")"
+            ],
+            "formatString": "\\$#,0.00;(\\$#,0.00);\\$#,0.00",
+            "displayFolder": "Orders",
+            "annotations": [
+              {
+                "name": "Format",
+                "value": "<Format Format=\"Currency\" Accuracy=\"2\"><Currency LCID=\"1033\" DisplayName=\"$ English (United States)\" Symbol=\"$\" PositivePattern=\"0\" NegativePattern=\"0\" /></Format>"
+              }
+            ]
+          },
+          {
+            "name": "Total Units Sold",
+            "expression": [
+              "",
+              "SUM(FactOrders[Quantity])"
+            ],
+            "formatString": "#,#",
+            "displayFolder": "Orders"
+          },
+          {
+            "name": "Total Orders",
+            "expression": " DISTINCTCOUNT(FactOrders[OrderID])",
+            "displayFolder": "Orders"
+          },
+          {
+            "name": "Sales LY",
+            "expression": [
+              " ",
+              "CALCULATE(",
+              "    [Total Sales Amount],",
+              "    SAMEPERIODLASTYEAR('DimDate'[FullDate])",
+              ")"
+            ],
+            "formatString": "\\$#,0.00;(\\$#,0.00);\\$#,0.00",
+            "displayFolder": "Orders",
+            "annotations": [
+              {
+                "name": "Format",
+                "value": "<Format Format=\"Currency\" Accuracy=\"2\"><Currency LCID=\"1033\" DisplayName=\"$ English (United States)\" Symbol=\"$\" PositivePattern=\"0\" NegativePattern=\"0\" /></Format>"
+              }
+            ]
+          },
+          {
+            "name": "YoY Sales Variance",
+            "expression": " [Total Sales Amount] - [Sales LY]",
+            "formatString": "\\$#,0.00;(\\$#,0.00);\\$#,0.00",
+            "displayFolder": "Orders",
+            "annotations": [
+              {
+                "name": "Format",
+                "value": "<Format Format=\"Currency\" Accuracy=\"2\"><Currency LCID=\"1033\" DisplayName=\"$ English (United States)\" Symbol=\"$\" PositivePattern=\"0\" NegativePattern=\"0\" /></Format>"
+              }
+            ]
+          },
+          {
+            "name": "YoY Sales %",
+            "expression": [
+              " ",
+              "DIVIDE(",
+              "    [YoY Sales Variance],",
+              "    [Sales LY],",
+              "    0",
+              ")"
+            ],
+            "formatString": "0.00%;-0.00%;0.00%",
+            "displayFolder": "Orders",
+            "kpi": {
+              "targetExpression": "0",
+              "targetFormatString": "0.00%;-0.00%;0.00%",
+              "statusGraphic": "Traffic Light - Single",
+              "statusExpression": [
+                "var x='FactOrders'[YoY Sales %] return",
+                "            if(ISBLANK(x),BLANK(),",
+                "                    If(x<-0.05,-1,",
+                "\t                If(x<0.05,0,1)",
+                "                )",
+                "            )",
+                "            "
+              ],
+              "annotations": [
+                {
+                  "name": "GoalType",
+                  "value": "StaticValue"
+                },
+                {
+                  "name": "KpiStatusType",
+                  "value": "Linear"
+                },
+                {
+                  "name": "KpiThresholdType",
+                  "value": "Absolute"
+                },
+                {
+                  "name": "KpiThresholdOrdering",
+                  "value": "Ascending"
+                },
+                {
+                  "name": "KpiThresholdCount",
+                  "value": "2"
+                },
+                {
+                  "name": "KpiThreshold_0",
+                  "value": "-0.05"
+                },
+                {
+                  "name": "KpiThreshold_1",
+                  "value": "0.05"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "name": "8fcba501-bffc-4caa-a97c-1da27504b32a",
+        "fromTable": "FactOrders",
+        "fromColumn": "RequiredDateKey",
+        "toTable": "DimDate",
+        "toColumn": "DateKey",
+        "isActive": false
+      },
+      {
+        "name": "c89223d7-73fd-4bf6-90ba-d0f85e506c63",
+        "fromTable": "FactOrders",
+        "fromColumn": "ShippedDateKey",
+        "toTable": "DimDate",
+        "toColumn": "DateKey",
+        "isActive": false
+      },
+      {
+        "name": "3361f0a5-78dc-49db-9d6e-fe1a765823bd",
+        "fromTable": "DimEmployees",
+        "fromColumn": "GeographyKey",
+        "toTable": "DimGeography",
+        "toColumn": "GeographyKey",
+        "isActive": false
+      },
+      {
+        "name": "06cb580d-2a17-4fe7-b846-f15d313bc5f6",
+        "fromTable": "FactOrders",
+        "fromColumn": "GeographyKey",
+        "toTable": "DimGeography",
+        "toColumn": "GeographyKey",
+        "isActive": false
+      },
+      {
+        "name": "031152f7-37bf-422e-9652-d2a9e1ed5594",
+        "fromTable": "DimProducts",
+        "fromColumn": "SupplierKey",
+        "toTable": "DimSuppliers",
+        "toColumn": "SupplierKey",
+        "isActive": false
+      },
+      {
+        "name": "3d76b67b-5c65-4095-83cf-3d909eed1f5b",
+        "fromTable": "DimCustomers",
+        "fromColumn": "GeographyKey",
+        "toTable": "DimGeography",
+        "toColumn": "GeographyKey"
+      },
+      {
+        "name": "49b9680b-011f-4f8d-81fd-45cccf73f31a",
+        "fromTable": "FactOrders",
+        "fromColumn": "CustomerKey",
+        "toTable": "DimCustomers",
+        "toColumn": "CustomerKey"
+      },
+      {
+        "name": "83bfa1ef-79c8-4d95-9386-fbe253d02e71",
+        "fromTable": "FactOrders",
+        "fromColumn": "OrderDateKey",
+        "toTable": "DimDate",
+        "toColumn": "DateKey"
+      },
+      {
+        "name": "fcc4aaa7-3409-46f3-82d9-380d9c9e0daa",
+        "fromTable": "FactEmployeeTerritory",
+        "fromColumn": "EmployeeKey",
+        "toTable": "DimEmployees",
+        "toColumn": "EmployeeKey"
+      },
+      {
+        "name": "afbfcf60-6a2a-4759-8f58-e23d4ba616c9",
+        "fromTable": "FactOrders",
+        "fromColumn": "EmployeeKey",
+        "toTable": "DimEmployees",
+        "toColumn": "EmployeeKey"
+      },
+      {
+        "name": "572f5ce2-bf1d-4bc4-8ba8-006b3ada9a0d",
+        "fromTable": "DimSuppliers",
+        "fromColumn": "GeographyKey",
+        "toTable": "DimGeography",
+        "toColumn": "GeographyKey"
+      },
+      {
+        "name": "7daa4d10-57aa-4cf0-8aa1-e374d8d41afc",
+        "fromTable": "FactOrders",
+        "fromColumn": "ProductKey",
+        "toTable": "DimProducts",
+        "toColumn": "ProductKey"
+      },
+      {
+        "name": "fdb6f6cd-f4de-4529-be61-5e7a11d21c4f",
+        "fromTable": "FactOrders",
+        "fromColumn": "ShipperKey",
+        "toTable": "DimShippers",
+        "toColumn": "ShipperKey"
+      },
+      {
+        "name": "be53a7b1-afe0-4827-becb-325cc2c34411",
+        "fromTable": "FactEmployeeTerritory",
+        "fromColumn": "TerritoryKey",
+        "toTable": "DimTerritory",
+        "toColumn": "TerritoryKey"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "ClientCompatibilityLevel",
+        "value": "600"
+      }
+    ]
+  },
+  "id": "SemanticModel"
+}

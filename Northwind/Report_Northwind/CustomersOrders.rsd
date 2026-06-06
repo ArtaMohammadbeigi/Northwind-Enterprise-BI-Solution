@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SharedDataSet xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/shareddatasetdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <Description />
+  <DataSet Name="CustomersOrders">
+    <Query>
+      <DataSourceReference>NorthwindDW</DataSourceReference>
+      <CommandText>SELECT 
+    c.CustomerKey,
+    c.CompanyName,
+    g.Country,
+    d.YearNumber as Year,
+
+    SUM( (f.UnitPrice * f.Quantity) * (1 - f.Discount) ) AS TotalOrders
+
+FROM DimCustomers AS c
+JOIN DimGeography AS g
+    ON c.GeographyKey = g.GeographyKey
+JOIN FactOrders AS f
+    ON c.CustomerKey = f.CustomerKey
+    AND g.GeographyKey = f.GeographyKey
+JOIN DimDate AS d
+    ON f.OrderDateKey = d.DateKey
+
+GROUP BY
+    c.CustomerKey,
+    c.CompanyName,
+    g.Country,
+    d.YearNumber
+
+ORDER BY
+    TotalOrders DESC;</CommandText>
+    </Query>
+    <Fields>
+      <Field Name="CustomerKey">
+        <DataField>CustomerKey</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="CompanyName">
+        <DataField>CompanyName</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="Country">
+        <DataField>Country</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="Year">
+        <DataField>Year</DataField>
+        <rd:TypeName>System.Int16</rd:TypeName>
+      </Field>
+      <Field Name="TotalOrders">
+        <DataField>TotalOrders</DataField>
+        <rd:TypeName>System.Double</rd:TypeName>
+      </Field>
+    </Fields>
+  </DataSet>
+</SharedDataSet>

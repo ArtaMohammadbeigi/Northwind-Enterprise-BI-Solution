@@ -1,0 +1,12 @@
+﻿<?xml version="1.0"?>
+<DTS:ConnectionManager xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:ObjectName="Arta.NorthwindStaging"
+  DTS:DTSID="{F66D550C-20FC-4676-BC10-3FA7E51EE8F8}"
+  DTS:CreationName="OLEDB">
+  <DTS:ObjectData>
+    <DTS:ConnectionManager
+      DTS:ConnectRetryCount="1"
+      DTS:ConnectRetryInterval="5"
+      DTS:ConnectionString="Data Source=Arta;Initial Catalog=NorthwindStaging;Provider=SQLOLEDB.1;Integrated Security=SSPI;Application Name=SSIS-Package1-{F66D550C-20FC-4676-BC10-3FA7E51EE8F8}Arta.NorthwindStaging;Auto Translate=False;" />
+  </DTS:ObjectData>
+</DTS:ConnectionManager>

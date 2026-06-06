@@ -1,0 +1,54 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.36631.11
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{C9674DCB-5085-4A16-B785-4C70DD1589BD}") = "ETL Northwind", "Integration Services Project\ETL Northwind.dtproj", "{941EAE29-5BEC-41A2-8AF5-8DD2F56956E1}"
+EndProject
+Project("{D2ABAB84-BF74-430A-B69E-9DC6D40DDA17}") = "OLAP_MD_Northwind", "OLAP_MD_Northwind\OLAP_MD_Northwind.dwproj", "{27DCAA35-DC7A-4F6F-9C55-8DB6FD886480}"
+EndProject
+Project("{6870E480-7721-4708-BFB8-9AE898AA21B3}") = "OLAP_TB_Northwind", "OLAP_TB_Northwind\OLAP_TB_Northwind.smproj", "{8CE414BB-95B2-4C99-9E03-51BA72086E22}"
+EndProject
+Project("{F14B399A-7131-4C87-9E4B-1186C45EF12D}") = "Report_Northwind", "Report_Northwind\Report_Northwind.rptproj", "{55798B5D-8331-44E9-85B5-CE14BF34AA85}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		DebugLocal|x86 = DebugLocal|x86
+		Development|x86 = Development|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{941EAE29-5BEC-41A2-8AF5-8DD2F56956E1}.Debug|x86.ActiveCfg = Development
+		{941EAE29-5BEC-41A2-8AF5-8DD2F56956E1}.DebugLocal|x86.ActiveCfg = Development
+		{941EAE29-5BEC-41A2-8AF5-8DD2F56956E1}.Development|x86.ActiveCfg = Development
+		{941EAE29-5BEC-41A2-8AF5-8DD2F56956E1}.Release|x86.ActiveCfg = Development
+		{27DCAA35-DC7A-4F6F-9C55-8DB6FD886480}.Debug|x86.ActiveCfg = Development
+		{27DCAA35-DC7A-4F6F-9C55-8DB6FD886480}.DebugLocal|x86.ActiveCfg = Development
+		{27DCAA35-DC7A-4F6F-9C55-8DB6FD886480}.Development|x86.ActiveCfg = Development
+		{27DCAA35-DC7A-4F6F-9C55-8DB6FD886480}.Release|x86.ActiveCfg = Development
+		{8CE414BB-95B2-4C99-9E03-51BA72086E22}.Debug|x86.ActiveCfg = Development|x86
+		{8CE414BB-95B2-4C99-9E03-51BA72086E22}.DebugLocal|x86.ActiveCfg = Development|x86
+		{8CE414BB-95B2-4C99-9E03-51BA72086E22}.Development|x86.ActiveCfg = Development|x86
+		{8CE414BB-95B2-4C99-9E03-51BA72086E22}.Development|x86.Build.0 = Development|x86
+		{8CE414BB-95B2-4C99-9E03-51BA72086E22}.Development|x86.Deploy.0 = Development|x86
+		{8CE414BB-95B2-4C99-9E03-51BA72086E22}.Release|x86.ActiveCfg = Development|x86
+		{55798B5D-8331-44E9-85B5-CE14BF34AA85}.Debug|x86.ActiveCfg = Debug
+		{55798B5D-8331-44E9-85B5-CE14BF34AA85}.Debug|x86.Build.0 = Debug
+		{55798B5D-8331-44E9-85B5-CE14BF34AA85}.Debug|x86.Deploy.0 = Debug
+		{55798B5D-8331-44E9-85B5-CE14BF34AA85}.DebugLocal|x86.ActiveCfg = DebugLocal
+		{55798B5D-8331-44E9-85B5-CE14BF34AA85}.DebugLocal|x86.Build.0 = DebugLocal
+		{55798B5D-8331-44E9-85B5-CE14BF34AA85}.Development|x86.ActiveCfg = Debug
+		{55798B5D-8331-44E9-85B5-CE14BF34AA85}.Development|x86.Build.0 = Debug
+		{55798B5D-8331-44E9-85B5-CE14BF34AA85}.Development|x86.Deploy.0 = Debug
+		{55798B5D-8331-44E9-85B5-CE14BF34AA85}.Release|x86.ActiveCfg = Release
+		{55798B5D-8331-44E9-85B5-CE14BF34AA85}.Release|x86.Build.0 = Release
+		{55798B5D-8331-44E9-85B5-CE14BF34AA85}.Release|x86.Deploy.0 = Release
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1C21191F-8DAC-4AAE-9B6F-268496E4AB4D}
+	EndGlobalSection
+EndGlobal
